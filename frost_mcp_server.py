@@ -91,6 +91,10 @@ class CreateAutomationRequest(BaseModel):
     platforms: Optional[List[str]] = ["web"]
     api_key: str
 
+class DeleteAgentRequest(BaseModel):
+    agent_id: str
+    api_key: str
+
 @app.get("/")
 async def root():
     """Health check endpoint"""
@@ -339,6 +343,29 @@ async def create_automation(request: CreateAutomationRequest):
             "project_id": project_id,
             "project_path": project_path,
             "message": "Automation created successfully"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/tools/delete_agent")
+async def delete_agent(request: DeleteAgentRequest):
+    """Decommission an agent from the hive"""
+    
+    # Validate API key
+    valid, message = get_key_manager().validate_key(request.api_key, "agent-management")
+    if not valid:
+        raise HTTPException(status_code=401, detail=message)
+    
+    try:
+        from hive import hive
+        success, msg = hive.delete_agent(request.agent_id)
+        if not success:
+            raise HTTPException(status_code=404, detail=msg)
+            
+        return {
+            "success": True,
+            "message": msg
         }
         
     except Exception as e:

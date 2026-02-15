@@ -155,14 +155,24 @@ with col_health:
     st.markdown("### 🐝 Swarm Status")
     st.metric("Total Agents", len(agents), delta=f"{len(agents)} Active")
     
-    with st.container():
         st.markdown("**Active Personas**")
-        for agent in agents[:8]:
-            st.markdown(f"""
-            <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; margin-bottom: 5px; font-size: 0.8em;">
-                <span style="color: #00d4ff;">●</span> {agent['name']} <small>({agent['strategy']})</small>
-            </div>
-            """, unsafe_allow_html=True)
+        for agent in agents:
+            cols = st.columns([4, 1])
+            with cols[0]:
+                st.markdown(f"""
+                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; margin-bottom: 5px; font-size: 0.8em;">
+                    <span style="color: #00d4ff;">●</span> {agent['name']} <small>({agent['strategy']})</small>
+                </div>
+                """, unsafe_allow_html=True)
+            with cols[1]:
+                if st.button("🗑️", key=f"del_{agent['id']}", help=f"Delete {agent['name']}"):
+                    success, msg = hive.delete_agent(agent['id'])
+                    if success:
+                        st.success(msg)
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.error(msg)
     
     if st.button("➕ Deploy Random Agent"):
         import random
