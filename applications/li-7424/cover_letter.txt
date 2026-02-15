@@ -1,0 +1,24 @@
+[Your Address]  
+[City, State, ZIP Code]  
+[Email Address]  
+[Phone Number]  
+[Date]  
+
+Hiring Manager  
+DHL  
+
+Dear Hiring Manager,
+
+I am writing to express my interest in the AI Engineer (Python, Gen AI) position with DHL. With expertise as an AI & Python Automation Expert, I am confident in my ability to deliver immediate, measurable results tailored to the needs of DHL.
+
+In my previous roles, I honed my skills in Python, AI agent development, and automation, which align perfectly with the requirements of this position. My experience in developing robust AI solutions and web scraping applications has led to substantial improvements in operational efficiency and cost savings for my clients. By harnessing Python and platforms like Zapier and Make.com, I have consistently achieved seamless integrations that enhance process automation.
+
+DHL’s commitment to leveraging cutting-edge technology resonates deeply with me, and I am eager to contribute to advancing your mission with innovative AI strategies. My recent project highlights include engineering AI-driven processes that reduced task completion times by 30%, underscoring my capability to deliver significant value and ROI.
+
+I am thrilled at the prospect of bringing my skills to DHL's esteemed team and contributing to the development of innovative, efficient solutions. I look forward to discussing how my experience and vision align with DHL’s objectives in more detail.
+
+Thank you for considering my application.
+
+Warm regards,
+
+Donovan Everitts  

@@ -1,0 +1,1 @@
+# plugins/notifications.py — placeholder

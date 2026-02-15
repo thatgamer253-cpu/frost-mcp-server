@@ -1,0 +1,46 @@
+```python
+# PoC for an Applied AI Engineer role, showcasing a Python AI-based web scraping script using Beautiful Soup and requests.
+
+import requests
+from bs4 import BeautifulSoup
+
+# Function to scrape job listings from a hypothetical job board
+def scrape_job_listings(url):
+    # Sending a GET request to the job board URL
+    response = requests.get(url)
+    # Ensure the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content using Beautiful Soup
+        soup = BeautifulSoup(response.content, 'html.parser')
+        # Extract job listings; hypothetical class and structure
+        job_listings = soup.find_all('div', class_='job-listing')
+        
+        # List to store extracted job details
+        jobs = []
+        
+        for job in job_listings:
+            # Extract relevant job details: title, company, and location
+            title = job.find('h2', class_='job-title').text
+            company = job.find('div', class_='company-name').text
+            location = job.find('span', class_='job-location').text
+            
+            # Append details as a dictionary to the jobs list
+            jobs.append({
+                'title': title.strip(),
+                'company': company.strip(),
+                'location': location.strip()
+            })
+        
+        return jobs
+    else:
+        # If request was not successful, return an empty list
+        return []
+
+# URL of the hypothetical job board to be scraped
+job_board_url = 'https://example-job-board.com/listings'
+
+# Call the function and print the result
+extracted_jobs = scrape_job_listings(job_board_url)
+print(extracted_jobs)
+
+```

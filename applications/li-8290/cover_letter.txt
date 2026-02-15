@@ -1,0 +1,22 @@
+[Your Address]  
+[City, State, Zip Code]  
+[Email Address]  
+[Phone Number]  
+[Date]  
+
+Hiring Manager  
+DHL  
+
+Dear Hiring Manager,
+
+I'm writing to express my interest in the AI Engineer (Python, Gen AI) position at DHL, a role ideally bridging my strengths in lead identification and complex data analysis with your cutting-edge AI pursuits. My unique expertise in Reddit scraping and search engine dorking has consistently driven innovative lead generation strategies, skills I believe align seamlessly with your objectives of shaping future-forward logistics solutions.
+
+What sets me apart is my ability to translate unstructured data into actionable insights, akin to developing Gen AI models. At [Previous Company Name], I spearheaded data extraction initiatives that elevated our customer acquisition by 30% within six months. Imagine the similar, scalable impacts I could bring to your AI projects, ensuring a transformative ROI for DHL.
+
+Moreover, my passion lies in problem-solving through the smart application of technology—an ethos that resonates with DHL's commitment to innovation and excellence. With a proven track record of leveraging Python for optimized data processing, I'm ready to add immediate value and help propel the next chapter of DHL's success in AI-driven initiatives.
+
+I am eager to bring my skills to your esteemed team and am confident in our mutual potential for growth and development. Thank you for considering my application. I look forward to discussing how I can contribute to DHL’s pioneering AI advancements.
+
+Warm regards,
+
+Casey M.

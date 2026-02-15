@@ -1,0 +1,29 @@
+# requirements.txt
+
+# Core dependencies
+PyQt5==5.15.7
+opencv-python==4.5.5.64
+numpy==1.21.2
+
+# Logging and configuration
+python-dotenv==0.19.2
+
+# Utilities
+retry==0.9.2
+
+# Development and testing
+pytest==6.2.5
+pytest-mock==3.6.1
+
+# Ensure compatibility with Pydantic v2 patterns
+pydantic==2.0.3
+pydantic-settings==2.0.3
+
+# Structured logging
+structlog==21.5.0
+
+# Ensure compatibility with MoviePy v2 patterns
+moviepy==2.0.0
+
+# Additional utilities
+importlib-metadata==4.8.1

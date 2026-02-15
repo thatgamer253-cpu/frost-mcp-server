@@ -1,0 +1,76 @@
+```python
+# Python/Scraping/AI job - Functional Python Script Template
+
+import requests
+from bs4 import BeautifulSoup
+from transformers import pipeline
+
+# Function to perform web scraping
+def scrape_website(url):
+    response = requests.get(url)
+    # Check if request was successful
+    if response.status_code == 200:
+        # Parse the HTML content
+        soup = BeautifulSoup(response.content, 'html.parser')
+        # Extract and return desired content, e.g., all text inside <p> tags
+        return [p.get_text() for p in soup.find_all('p')]
+    else:
+        raise Exception('Failed to retrieve content')
+
+# Function to analyze text using a pre-trained transformer model
+def analyze_text(text_list):
+    # Load a sentiment-analysis pipeline
+    sentiment_analyzer = pipeline("sentiment-analysis")
+    results = []
+    for text in text_list:
+        # Analyze text and append result
+        results.append(sentiment_analyzer(text))
+    return results
+
+# Example usage
+url = 'https://example.com'
+scraped_texts = scrape_website(url)
+analysis_results = analyze_text(scraped_texts)
+
+# Output results
+for result in analysis_results:
+    print(result)
+```
+
+```python
+# SaaS/Web job - Core Component API Route Logic (e.g., Flask)
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/api/analyze', methods=['POST'])
+def analyze():
+    # Extract data from request
+    data = request.json
+    text = data.get('text', '')
+
+    # Basic ML operation example: character count
+    if len(text) == 0:
+        return jsonify({'error': 'No text provided'}), 400
+
+    # Placeholder for a more complex ML operation
+    result = len(text)  # Count characters in the given text
+
+    # Return the result as JSON
+    return jsonify({'character_count': result})
+
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+```yaml
+# Automation (Zapier/n8n) - Workflow Steps
+
+# n8n Workflow steps
+# 1. Start Node: Receives data via HTTP webhook or manual trigger.
+# 2. HTTP Request Node: Fetch data from a defined URL (e.g., API call).
+# 3. Function Node: Process received data. E.g., loop through JSON, perform calculations.
+# 4. Decision Node: Branch logic based on specific conditions (if-else like structure).
+# 5. Output Node: Send results to an external application (e.g., email, Slack).
+```

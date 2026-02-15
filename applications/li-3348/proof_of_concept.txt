@@ -1,0 +1,54 @@
+```python
+# PoC: Python Script for Scraping and Simple AI Application on LinkedIn
+
+import requests
+from bs4 import BeautifulSoup
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Define the target LinkedIn job listings URL
+linkedin_url = "https://www.linkedin.com/jobs/search/?keywords=AI%20Engineer"
+
+def scrape_linkedin_jobs(url):
+    """
+    Scrapes job titles and descriptions from LinkedIn.
+    """
+    # Send a GET request to LinkedIn
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Extract job titles and descriptions
+    # Note: The actual classes may vary; inspect the LinkedIn job page to get accurate class names
+    job_titles = [title.text.strip() for title in soup.find_all('h3', class_='job-result-card__title')]
+    job_descriptions = [desc.text.strip() for desc in soup.find_all('p', class_='job-result-card__snippet')]
+    
+    # Return a list of tuples containing job titles and descriptions
+    return list(zip(job_titles, job_descriptions))
+
+def apply_simple_ai_technique(jobs_data):
+    """
+    Applies a simple AI technique to find the most similar job descriptions.
+    For demonstration, we are using TF-IDF and cosine similarity.
+    """
+    # Vectorize job descriptions
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform([desc for _, desc in jobs_data])
+    
+    # Compute the cosine similarity between the first job and the rest
+    cosine_similarities = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix).flatten()
+    
+    # Finding the most similar job to the first one based on description
+    most_similar_index = cosine_similarities.argsort()[-2]
+    
+    # Return the most similar job
+    return jobs_data[most_similar_index]
+
+# Execute the functions
+jobs_data = scrape_linkedin_jobs(linkedin_url)
+most_similar_job = apply_simple_ai_technique(jobs_data)
+
+# Output the result
+print("Most Similar Job to the First Job:")
+print(f"Title: {most_similar_job[0]}")
+print(f"Description: {most_similar_job[1]}")
+```

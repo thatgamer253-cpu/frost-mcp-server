@@ -1,0 +1,79 @@
+```python
+# Import necessary libraries
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import time
+
+# Initialize Selenium WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+# Define a function to scrape profiles from LinkedIn
+def scrape_linkedin_profile(profile_url):
+    try:
+        # Open LinkedIn profile using Selenium
+        driver.get(profile_url)
+        
+        # Pause to allow the page to fully load
+        time.sleep(5)
+        
+        # Parse page content using BeautifulSoup
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        
+        # Extract profile details. Identifiers will vary, this is only a template
+        name = soup.find('h1', {'class': 'text-heading-xlarge'}).get_text().strip()
+        headline = soup.find('div', {'class': 'text-body-medium'}).get_text().strip()
+        
+        # Print the extracted details
+        print(f"Name: {name}")
+        print(f"Headline: {headline}")
+        
+        # Return the extracted data
+        return {
+            'name': name,
+            'headline': headline,
+        }
+    
+    except Exception as e:
+        # Capture and print any exceptions
+        print(f"Error: {e}")
+
+# Example usage of the function
+profile_url = 'https://www.linkedin.com/in/some-profile/'
+scrape_linkedin_profile(profile_url)
+
+# Close the driver
+driver.quit()
+```
+
+```yaml
+# Zapier Workflow Steps (Pseudo-Format)
+
+# Trigger Step
+- name: Trigger on New LinkedIn Connection
+  app: LinkedIn
+  trigger: New Connection
+
+# Action Step 1
+- name: Fetch Connection's Profile Data
+  app: Webhooks by Zapier
+  action: GET
+  url: https://api.linkedin.com/v2/me
+  headers:
+    Authorization: Bearer {{access_token}}
+  
+# Action Step 2
+- name: Store Profile Data in Google Sheets
+  app: Google Sheets
+  action: Create Spreadsheet Row
+  inputData:
+    Spreadsheet: LinkedIn Connections
+    Worksheet: Sheet1
+    Data:
+      - {{fetch_profile_data.name}}
+      - {{fetch_profile_data.headline}}
+
+# Note: This automation assumes the availability of LinkedIn's API access and valid access tokens.
+```

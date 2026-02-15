@@ -1,0 +1,62 @@
+```python
+# The following is a Proof of Concept (PoC) for an Applied AI Engineer role focused on Python, Scraping, and AI.
+
+# Import necessary libraries
+import requests
+from bs4 import BeautifulSoup
+import openai
+
+# Initialize OpenAI API key (assume set in environment)
+openai.api_key = 'YOUR_OPENAI_API_KEY'
+
+def scrape_webpage(url):
+    """
+    Function to scrape the given URL and extract text.
+    """
+    # Send a GET request to the given URL
+    response = requests.get(url)
+    
+    # Parse the HTML content using BeautifulSoup
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    # Extract text from the webpage
+    text = soup.get_text()
+    
+    return text
+
+def summarize_text(text, model="gpt-3.5-turbo"):
+    """
+    Use OpenAI's API to summarize the given text.
+    """
+    # Request summary from OpenAI API
+    completion = openai.Completion.create(
+        model=model,
+        prompt=f"Summarize the following text: {text}",
+        max_tokens=150
+    )
+    
+    # Extract the summarized text from the response
+    summary = completion.choices[0].text.strip()
+    
+    return summary
+
+def main():
+    """
+    Main function to perform scraping and summarization.
+    """
+    # Target URL to scrape
+    url = "https://example.com"
+    
+    # Scrape the webpage
+    webpage_text = scrape_webpage(url)
+    
+    # Summarize the extracted text
+    summary = summarize_text(webpage_text)
+    
+    # Output the summary
+    print("Summary of the webpage content:")
+    print(summary)
+
+if __name__ == "__main__":
+    main()
+```

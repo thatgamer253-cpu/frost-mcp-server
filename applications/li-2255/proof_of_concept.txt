@@ -1,0 +1,50 @@
+```python
+# Proof of Concept for an Applied AI Engineer focusing on Python/Scraping/AI
+
+import requests
+from bs4 import BeautifulSoup
+import openai
+
+# Function to scrape LinkedIn job postings
+def scrape_linkedin_jobs(keyword):
+    url = f"https://www.linkedin.com/jobs/search?keywords={keyword}"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    jobs = []
+    for job_card in soup.find_all('div', class_='job-card-list'):
+        title_elem = job_card.find('h3', class_='job-card-list__title')
+        company_elem = job_card.find('h4', class_='job-card-list__company-name')
+        location_elem = job_card.find('span', class_='job-card-list__location')
+        
+        if title_elem and company_elem and location_elem:
+            jobs.append({
+                'title': title_elem.text.strip(),
+                'company': company_elem.text.strip(),
+                'location': location_elem.text.strip(),
+            })
+    return jobs
+
+# Function to process text data with OpenAI's GPT-like model
+def process_job_description(description):
+    openai_api_key = "your_openai_api_key"
+    openai.api_key = openai_api_key
+    
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=f"Analyze the following job description and summarize the key points:\n\n{description}",
+        max_tokens=150
+    )
+    return response.choices[0].text.strip()
+
+# Example usage
+if __name__ == "__main__":
+    keyword = "AI Engineer"
+    job_postings = scrape_linkedin_jobs(keyword)
+    for job in job_postings:
+        print(f"Title: {job['title']}, Company: {job['company']}, Location: {job['location']}")
+        # Assuming each job has a detailed description; here it's simplified
+        description = f"{job['title']} at {job['company']}, located in {job['location']}"
+        key_points = process_job_description(description)
+        print(f"Key Points: {key_points}\n")
+```

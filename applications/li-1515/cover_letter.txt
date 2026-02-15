@@ -1,0 +1,26 @@
+[Your Address]  
+[City, State, ZIP Code]  
+[Email Address]  
+[Phone Number]  
+[Date]  
+
+Hiring Manager  
+DHL  
+
+Dear Hiring Manager,
+
+I am writing to express my interest in the AI Engineer (Python, Gen AI) position listed as a remote opportunity at DHL. As a seasoned AI and Python Automation Expert with a proven track record in Python, web scraping, and AI agent development, I am excited about the prospect of leveraging my skills to deliver immediate value and innovative solutions to your team.
+
+My professional journey has honed my capabilities in implementing advanced automation solutions, from web scraping to integrating sophisticated AI-driven systems, using tools like Zapier and Make.com. These competencies uniquely align with DHL's commitment to cutting-edge technological innovation, especially in the realm of generative AI. I am adept at designing and deploying AI solutions that not only enhance efficiency but also significantly reduce operational costs.
+
+At the core of my approach is a results-oriented mindset, ensuring that each project not only meets but exceeds set objectives, translating into tangible ROI for stakeholders. My experience enables me to swiftly navigate complex AI challenges and deliver integrated solutions that propel business growth.
+
+I am enthusiastic about the opportunity to contribute to DHL’s innovative projects as a remote AI Engineer. I am confident that my skills will prove an invaluable asset to your team, and I look forward to discussing how I can help drive DHL's AI ambitions forward.
+
+Thank you for considering my application.
+
+Warm regards,
+
+Donovan Everitts
+
+[Enclosure: Resume]

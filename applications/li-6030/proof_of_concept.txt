@@ -1,0 +1,74 @@
+```python
+# Import necessary libraries
+import requests
+from bs4 import BeautifulSoup
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+
+# Function to scrape LinkedIn job descriptions
+def scrape_linkedin_jobs():
+    url = 'https://www.linkedin.com/jobs/search'  # LinkedIn job search URL
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Find job descriptions on the page
+    jobs = soup.find_all('div', class_='job-description')
+    job_descriptions = [job.text for job in jobs]
+    return job_descriptions
+
+# Function to analyze job descriptions using AI (text clustering)
+def analyze_job_descriptions(descriptions):
+    # Apply TF-IDF vectorization
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(descriptions)
+    
+    # Cluster job descriptions using KMeans
+    kmeans = KMeans(n_clusters=5, random_state=42)
+    kmeans.fit(X)
+    return kmeans.labels_
+
+# Main script execution
+if __name__ == "__main__":
+    job_descriptions = scrape_linkedin_jobs()
+    labels = analyze_job_descriptions(job_descriptions)
+    
+    for job_desc, label in zip(job_descriptions, labels):
+        print(f"Cluster {label}: {job_desc[:100]}...")  # Print a preview of each job description cluster
+```
+
+```javascript
+// Express.js API route for a SaaS/Web job
+const express = require('express');
+const router = express.Router();
+
+// Dummy data for demonstration
+const userProfiles = [
+    { id: 1, name: 'Alice', occupation: 'AI Developer' },
+    { id: 2, name: 'Bob', occupation: 'Data Scientist' }
+];
+
+// GET route handler logic for fetching user profiles
+router.get('/api/user_profiles', (req, res) => {
+    // Fetch and return user profiles
+    res.json(userProfiles);
+});
+
+module.exports = router;
+```
+
+```text
+# Automation steps for Zapier/n8n workflow to notify on new LinkedIn job listings
+
+1. Trigger: New LinkedIn Job Listing Detected
+   - Use LinkedIn job RSS feed or an API integration (if available).
+
+2. Extract Data:
+   - Retrieve job title, company name, location, and job description from the listing.
+
+3. Filter:
+   - Apply filters: location, job type, keywords (e.g., "AI Developer").
+
+4. Action: Send Notification
+   - Connect to an email service (like Gmail or SMTP).
+   - Compose and send an email with job details to a predefined list of recipients.
+```

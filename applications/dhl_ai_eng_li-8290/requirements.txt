@@ -1,0 +1,7 @@
+PyQt6
+FastAPI
+NumPy
+OpenCV
+Prisma
+psycopg2
+python-dotenv

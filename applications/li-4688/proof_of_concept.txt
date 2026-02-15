@@ -1,0 +1,56 @@
+```python
+# Proof of Concept for Applied AI Engineer - Python/AI Job
+
+# Import necessary libraries
+import requests
+from bs4 import BeautifulSoup
+import openai
+
+# Define a function to scrape data from a LinkedIn page
+def scrape_linkedin_data(profile_url):
+    # Send a GET request to the LinkedIn profile URL
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(profile_url, headers=headers)
+    
+    if response.status_code == 200:
+        # Parse the page content with BeautifulSoup
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Example: Fetching the name of the profile
+        name = soup.find('h1', class_='top-card-layout__title').text.strip()
+        
+        # Add more parsing logic as needed to extract the desired data
+        # ...
+
+        return {'name': name}
+    else:
+        raise Exception(f"Failed to access LinkedIn page: {response.status_code}")
+
+# Define a function to process extracted data using OpenAI API
+def generate_summary_from_data(profile_data, api_key):
+    # Initialize the OpenAI API with the provided API key
+    openai.api_key = api_key
+    
+    # Use the fetched data to prompt the OpenAI model for a summary
+    prompt_text = f"Summarize the LinkedIn profile details: {profile_data['name']}"
+    
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=prompt_text,
+        max_tokens=100
+    )
+    
+    # Extract and return the summary from the API response
+    summary = response.choices[0].text.strip()
+    return summary
+
+# Example usage
+# Replace 'your_api_key' with your actual OpenAI API key
+# Replace 'profile_url' with the actual LinkedIn profile URL you want to test
+api_key = 'your_api_key'
+profile_url = 'https://www.linkedin.com/in/example-profile'
+profile_data = scrape_linkedin_data(profile_url)
+summary = generate_summary_from_data(profile_data, api_key)
+
+print("Summary:\n", summary)
+```

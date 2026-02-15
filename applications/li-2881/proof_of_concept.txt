@@ -1,0 +1,90 @@
+```python
+# Python script template for web scraping automation
+
+import requests
+from bs4 import BeautifulSoup
+
+# Define the URL to scrape
+url = 'https://www.example.com'
+
+# Function to handle the web scraping
+def scrape_website(url):
+    # Send a GET request to the specified URL
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Extract required data. Example: all text within <h2> tags
+        headlines = soup.find_all('h2')
+        for headline in headlines:
+            print(headline.text.strip())
+    else:
+        print(f"Failed to retrieve content: Status {response.status_code}")
+
+# Execute the function with the specified URL
+if __name__ == "__main__":
+    scrape_website(url)
+
+# Comments:
+# 1. This script sets up basic web scraping functionality using Python.
+# 2. Utilizes 'requests' for HTTP requests to the target URL.
+# 3. 'BeautifulSoup' is used to parse HTML and extract desired data, in this case, all <h2> tag contents.
+# 4. Replace the example URL and extraction logic with those relevant to your needs.
+```
+
+```yaml
+# n8n workflow for automation
+
+version: 1
+nodes:
+  - name: Webhook Trigger
+    type: n8n-nodes-base.webhook
+    position:
+      x: 250
+      y: 300
+    parameters:
+      httpMethod: POST
+      path: /trigger-webhook
+  - name: HTTP Request
+    type: n8n-nodes-base.httpRequest
+    position:
+      x: 600
+      y: 300
+    parameters:
+      method: GET
+      url: https://www.exampleapi.com/data
+  - name: Data Transformation
+    type: n8n-nodes-base.function
+    position:
+      x: 900
+      y: 300
+    parameters:
+      functionCode: |
+        return items.map(item => {
+          const data = item.json;
+          return {
+            json: {
+              id: data.id,
+              transformedData: data.value.toUpperCase(), // Example transformation
+            }
+          };
+        });
+  - name: Send Email
+    type: n8n-nodes-base.emailSend
+    position:
+      x: 1200
+      y: 300
+    parameters:
+      toEmail: 'example@domain.com'
+      subject: 'Data Report'
+      text: 'Here is the processed data report.'
+
+# Comments:
+# 1. The workflow starts with a webhook trigger, listening for POST requests.
+# 2. An HTTP GET request fetches data from an external API.
+# 3. The data is transformed using a Function node.
+# 4. Finally, the transformed data is sent via email.
+```

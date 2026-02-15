@@ -1,0 +1,1 @@
+# config/constants.py — placeholder

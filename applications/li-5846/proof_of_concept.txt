@@ -1,0 +1,48 @@
+```python
+# Proof of Concept (PoC) for Applied AI Engineer role focusing on Python/Scraping/AI
+
+# Import necessary libraries for web scraping and AI
+import requests
+from bs4 import BeautifulSoup
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+import numpy as np
+
+# Define a function to scrape a webpage
+def scrape_webpage(url):
+    # Fetch the content from the URL
+    response = requests.get(url)
+    # Parse the content with BeautifulSoup
+    soup = BeautifulSoup(response.content, 'html.parser')
+    # Extract text data from specific HTML tags
+    texts = [element.text for element in soup.find_all('p')]
+    return texts
+
+# Define a function to process text data and implement a simple AI task
+def cluster_text_data(texts):
+    # Transform the text data into TF-IDF features
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(texts)
+    
+    # Apply K-means clustering to identify similar text groups
+    num_clusters = 3
+    kmeans = KMeans(n_clusters=num_clusters)
+    kmeans.fit(X)
+    
+    # Return the clustering results
+    return kmeans.labels_, kmeans.cluster_centers_
+
+# Example usage
+if __name__ == "__main__":
+    # URL of the page to be scraped
+    url = "https://www.example.com"
+    # Scrape the webpage to extract text data
+    text_data = scrape_webpage(url)
+    
+    # Process and cluster the text data using AI techniques
+    labels, centers = cluster_text_data(text_data)
+    
+    # Output the clustering result
+    print("Cluster Labels:", labels)
+    print("Cluster Centers: (TF-IDF features)", centers)
+```

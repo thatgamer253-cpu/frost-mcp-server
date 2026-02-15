@@ -1,0 +1,25 @@
+2026/02/15-04:54:18.995 7220 Reusing MANIFEST C:\Users\thatg\Desktop\Frost\browser_session\Default\IndexedDB\https_www.upwork.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/15-04:54:18.995 7220 Recovering log #83
+2026/02/15-04:54:18.995 7220 Reusing old log C:\Users\thatg\Desktop\Frost\browser_session\Default\IndexedDB\https_www.upwork.com_0.indexeddb.leveldb/000083.log 
+2026/02/15-04:54:18.995 7220 Delete type=2 #82
+2026/02/15-04:54:19.181 575c Level-0 table #88: started
+2026/02/15-04:54:19.184 575c Level-0 table #88: 1399 bytes OK
+2026/02/15-04:54:19.185 575c Delete type=0 #83
+2026/02/15-04:54:19.186 4bac Manual compaction at level-0 from '\x00$\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00%\x00\x00\x00' @ 0 : 0; will stop at '\x00%\x00\x00\x05' @ 1028 : 1
+2026/02/15-04:54:19.186 4bac Compacting 1@0 + 1@1 files
+2026/02/15-04:54:19.187 4bac Generated table #89@0: 317 keys, 27018 bytes
+2026/02/15-04:54:19.187 4bac Compacted 1@0 + 1@1 files => 27018 bytes
+2026/02/15-04:54:19.188 4bac compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/15-04:54:19.188 4bac Delete type=2 #88
+2026/02/15-04:54:19.188 4bac Manual compaction at level-0 from '\x00%\x00\x00\x05' @ 1028 : 1 .. '\x00%\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/02/15-04:54:19.189 4bac Level-0 table #91: started
+2026/02/15-04:54:19.190 4bac Level-0 table #91: 1016 bytes OK
+2026/02/15-04:54:19.191 4bac Delete type=2 #85
+2026/02/15-04:54:19.191 4bac Delete type=0 #87
+2026/02/15-04:54:19.191 4bac Manual compaction at level-0 from '\x00%\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00&\x00\x00\x00' @ 0 : 0; will stop at '\x00%\x00\x00\x05' @ 1070 : 0
+2026/02/15-04:54:19.192 4bac Compacting 1@0 + 1@1 files
+2026/02/15-04:54:19.193 4bac Generated table #92@0: 322 keys, 26714 bytes
+2026/02/15-04:54:19.193 4bac Compacted 1@0 + 1@1 files => 26714 bytes
+2026/02/15-04:54:19.194 4bac compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/15-04:54:19.194 4bac Delete type=2 #91
+2026/02/15-04:54:19.194 4bac Manual compaction at level-0 from '\x00%\x00\x00\x05' @ 1070 : 0 .. '\x00&\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -1,0 +1,57 @@
+```python
+# Proof of Concept for an Applied AI Engineer role - Focus: AI-driven Data Scraping with Python
+
+# Import necessary libraries for web scraping and machine learning
+import requests
+from bs4 import BeautifulSoup
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+
+# Define a function to fetch HTML content from a URL
+def fetch_html_content(url):
+    response = requests.get(url)
+    return response.content
+
+# Define function to parse and extract text information from the HTML
+def extract_text_from_html(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    # Extract all paragraph and heading text
+    texts = soup.find_all(['p', 'h1', 'h2', 'h3'])
+    return ' '.join([text.get_text() for text in texts])
+
+# Define a function to preprocess text for AI analysis
+def preprocess_text(text):
+    # Convert the text to lowercase
+    return text.lower()
+
+# Define function for KMeans clustering on text data
+def cluster_text_data(text_data, num_clusters=5):
+    # Vectorize text data to numerical format
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(text_data)
+
+    # Apply KMeans clustering
+    kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+    kmeans.fit(X)
+
+    return kmeans.labels_, kmeans
+
+# Define main function to execute the entire process
+def process_url_for_clustering(url):
+    # Step 1: Fetch HTML content
+    html_content = fetch_html_content(url)
+
+    # Step 2: Extract and preprocess text from HTML
+    raw_text = extract_text_from_html(html_content)
+    processed_text = preprocess_text(raw_text)
+
+    # Step 3: Cluster processed text data
+    cluster_labels, kmeans_model = cluster_text_data([processed_text])
+
+    # Return cluster label result
+    return cluster_labels
+
+# Example execution of the script with an illustrative URL
+url_example = "https://www.example.com"
+print(process_url_for_clustering(url_example))
+```
