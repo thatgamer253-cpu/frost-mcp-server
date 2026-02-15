@@ -61,6 +61,9 @@ def get_creation_engine():
             _creation_engine = MockCreationEngine()
     return _creation_engine
 
+# Initialize FastAPI
+app = FastAPI(title="Frost MCP Server", version="1.0.0")
+
 # Request models
 class ScanJobsRequest(BaseModel):
     keywords: List[str]
