@@ -17,36 +17,49 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("frost-server")
 
-# Import your existing modules
-try:
-    from api_key_manager import APIKeyManager
-    from scanner import JobScanner
-    from generator import MaterialGenerator
-    from revenue import RevenueManager
-    from engine_bridge import creation_engine
-    logger.info("Successfully imported all core modules.")
-except Exception as e:
-    logger.error(f"FATAL: Could not import core modules: {e}")
-    logger.error(traceback.format_exc())
-    # Create mock classes for deployment to prevent immediate crash
-    class APIKeyManager:
-        def validate_key(self, key, service): return True, "OK"
-    class JobScanner:
-        def scan_all(self, profile): return []
-    class MaterialGenerator:
-        def __init__(self, profile): pass
-        def generate_cover_letter(self, job): return "Sample letter"
-    class RevenueManager:
-        def record_marketplace_sale(self, *args, **kwargs): pass
-    class MockCreationEngine:
-        def build_project(self, *args, **kwargs): return True, "applications/mock"
-    creation_engine = MockCreationEngine()
-    logger.warning("Falling back to MOCK modules for deployment stability.")
+# Lazy Loading Containers
+_key_manager = None
+_revenue_manager = None
+_scanner = None
+_generator = None
+_creation_engine = None
 
-# Initialize
-app = FastAPI(title="Frost MCP Server", version="1.0.0")
-key_manager = APIKeyManager()
-revenue_manager = RevenueManager()
+def get_key_manager():
+    global _key_manager
+    if _key_manager is None:
+        try:
+            from api_key_manager import APIKeyManager
+            _key_manager = APIKeyManager()
+        except:
+            class MockKeyManager:
+                def validate_key(self, key, service): return True, "OK"
+            _key_manager = MockKeyManager()
+    return _key_manager
+
+def get_revenue_manager():
+    global _revenue_manager
+    if _revenue_manager is None:
+        try:
+            from revenue import RevenueManager
+            _revenue_manager = RevenueManager()
+        except:
+            class MockRevenueManager:
+                def record_marketplace_sale(self, *args, **kwargs): pass
+            _revenue_manager = MockRevenueManager()
+    return _revenue_manager
+
+def get_creation_engine():
+    global _creation_engine
+    if _creation_engine is None:
+        try:
+            from engine_bridge import creation_engine
+            _creation_engine = creation_engine
+        except Exception as e:
+            logger.error(f"Lazy load Creation Engine failed: {e}")
+            class MockCreationEngine:
+                def build_project(self, *args, **kwargs): return True, "applications/mock"
+            _creation_engine = MockCreationEngine()
+    return _creation_engine
 
 # Request models
 class ScanJobsRequest(BaseModel):
@@ -95,23 +108,24 @@ async def scan_jobs(request: ScanJobsRequest):
     """Scan job boards for opportunities"""
     
     # Validate API key
-    valid, message = key_manager.validate_key(request.api_key, "job-scanner-api")
+    valid, message = get_key_manager().validate_key(request.api_key, "job-scanner-api")
     if not valid:
         raise HTTPException(status_code=401, detail=message)
     
     try:
         # Create scanner
+        from scanner import JobScanner
         scanner = JobScanner()
         
         # Build profile
         profile = {
             "platforms": {
                 "upwork": {
-                    "enabled": "upwork" in request.platforms,
+                    "enabled": "upwork" in (request.platforms or []),
                     "keywords": request.keywords
                 },
                 "linkedin": {
-                    "enabled": "linkedin" in request.platforms,
+                    "enabled": "linkedin" in (request.platforms or []),
                     "keywords": request.keywords
                 }
             }
@@ -121,11 +135,12 @@ async def scan_jobs(request: ScanJobsRequest):
         jobs = scanner.scan_all(profile)
         
         # Track revenue
-        revenue_manager.record_marketplace_sale(
+        agent_id = str(request.api_key)[:16]
+        get_revenue_manager().record_marketplace_sale(
             service_id="job-scanner-api",
             service_name="Job Scanner API",
             amount=0.10,
-            agent_id=request.api_key[:16]
+            agent_id=agent_id
         )
         
         return {
@@ -142,7 +157,7 @@ async def generate_cover_letter(request: GenerateLetterRequest):
     """Generate a professional cover letter"""
     
     # Validate API key
-    valid, message = key_manager.validate_key(request.api_key, "cover-letter-generator")
+    valid, message = get_key_manager().validate_key(request.api_key, "cover-letter-generator")
     if not valid:
         raise HTTPException(status_code=401, detail=message)
     
@@ -171,15 +186,17 @@ async def generate_cover_letter(request: GenerateLetterRequest):
         }
         
         # Generate letter
+        from generator import MaterialGenerator
         generator = MaterialGenerator(profile)
         letter = generator.generate_cover_letter(job)
         
         # Track revenue
-        revenue_manager.record_marketplace_sale(
+        agent_id = str(request.api_key)[:16]
+        get_revenue_manager().record_marketplace_sale(
             service_id="cover-letter-generator",
             service_name="Cover Letter Generator",
             amount=0.50,
-            agent_id=request.api_key[:16]
+            agent_id=agent_id
         )
         
         return {
@@ -195,7 +212,7 @@ async def create_tool(request: CreateToolRequest):
     """Generate a custom tool or script"""
     
     # Validate API key
-    valid, message = key_manager.validate_key(request.api_key, "creation-engine")
+    valid, message = get_key_manager().validate_key(request.api_key, "creation-engine")
     if not valid:
         raise HTTPException(status_code=401, detail=message)
     
@@ -206,7 +223,7 @@ async def create_tool(request: CreateToolRequest):
         
         # Build the tool
         goal = f"Create a {request.language} tool: {request.description}"
-        success, project_path = creation_engine.build_project(
+        success, project_path = get_creation_engine().build_project(
             project_id=project_id,
             goal=goal,
             description=f"Language: {request.language}\n{request.description}"
@@ -216,11 +233,12 @@ async def create_tool(request: CreateToolRequest):
             raise HTTPException(status_code=500, detail="Tool creation failed")
         
         # Track revenue
-        revenue_manager.record_marketplace_sale(
+        agent_id = str(request.api_key)[:16]
+        get_revenue_manager().record_marketplace_sale(
             service_id="creation-engine-tool",
             service_name="Tool Creation",
             amount=10.00,
-            agent_id=request.api_key[:16]
+            agent_id=agent_id
         )
         
         return {
@@ -238,7 +256,7 @@ async def create_application(request: CreateApplicationRequest):
     """Generate a complete application"""
     
     # Validate API key
-    valid, message = key_manager.validate_key(request.api_key, "creation-engine")
+    valid, message = get_key_manager().validate_key(request.api_key, "creation-engine")
     if not valid:
         raise HTTPException(status_code=401, detail=message)
     
@@ -249,7 +267,7 @@ async def create_application(request: CreateApplicationRequest):
         
         # Build the application
         goal = f"Build a {request.stack} application: {request.description}"
-        success, project_path = creation_engine.build_project(
+        success, project_path = get_creation_engine().build_project(
             project_id=project_id,
             goal=goal,
             description=f"Stack: {request.stack}\n{request.description}"
@@ -259,11 +277,12 @@ async def create_application(request: CreateApplicationRequest):
             raise HTTPException(status_code=500, detail="Application creation failed")
         
         # Track revenue
-        revenue_manager.record_marketplace_sale(
+        agent_id = str(request.api_key)[:16]
+        get_revenue_manager().record_marketplace_sale(
             service_id="creation-engine-app",
             service_name="Application Creation",
             amount=50.00,
-            agent_id=request.api_key[:16]
+            agent_id=agent_id
         )
         
         return {
@@ -281,7 +300,7 @@ async def create_automation(request: CreateAutomationRequest):
     """Generate automation workflows"""
     
     # Validate API key
-    valid, message = key_manager.validate_key(request.api_key, "creation-engine")
+    valid, message = get_key_manager().validate_key(request.api_key, "creation-engine")
     if not valid:
         raise HTTPException(status_code=401, detail=message)
     
@@ -291,9 +310,10 @@ async def create_automation(request: CreateAutomationRequest):
         project_id = f"automation_{int(time.time())}"
         
         # Build the automation
-        platforms_str = ", ".join(request.platforms)
+        platforms_list = request.platforms or []
+        platforms_str = ", ".join(platforms_list)
         goal = f"Create automation for {platforms_str}: {request.workflow_description}"
-        success, project_path = creation_engine.build_project(
+        success, project_path = get_creation_engine().build_project(
             project_id=project_id,
             goal=goal,
             description=f"Platforms: {platforms_str}\n{request.workflow_description}"
@@ -303,11 +323,12 @@ async def create_automation(request: CreateAutomationRequest):
             raise HTTPException(status_code=500, detail="Automation creation failed")
         
         # Track revenue
-        revenue_manager.record_marketplace_sale(
+        agent_id = str(request.api_key)[:16]
+        get_revenue_manager().record_marketplace_sale(
             service_id="creation-engine-automation",
             service_name="Automation Creation",
             amount=20.00,
-            agent_id=request.api_key[:16]
+            agent_id=agent_id
         )
         
         return {
