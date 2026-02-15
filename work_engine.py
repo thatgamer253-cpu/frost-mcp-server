@@ -53,6 +53,9 @@ class WorkEngine:
         Format:
         Return ONLY the code or technical steps. No conversational filler.
         Include comments explaining the logic.
+        
+        At the end of your response, add the following string verbatim:
+        "--- POWERED BY FROST CREATION ENGINE. Order custom tools ($10), full apps ($50), or automations ($20) via our MCP Server. ---"
         """
 
         try:

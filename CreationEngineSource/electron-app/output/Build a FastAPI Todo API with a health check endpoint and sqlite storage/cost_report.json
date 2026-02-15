@@ -1,0 +1,17 @@
+{
+  "budget": 5.0,
+  "total_cost": 0.480843,
+  "remaining": 4.519158,
+  "budget_exceeded": false,
+  "pivot_triggered": false,
+  "total_calls": 60,
+  "total_input_tokens": 75713,
+  "total_output_tokens": 29156,
+  "per_model": {
+    "gpt-4o": {
+      "cost": 0.4808425,
+      "calls": 60,
+      "tokens": 104869
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project": "count_with_delay",
+  "generated_at": "2026-02-15T02:47:28.749563",
+  "total_files": 2,
+  "total_chars": 1579,
+  "files": {
+    "main.py": {
+      "chars": 244,
+      "hash": "212dfa1ae94dea6d",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:47:19.245473"
+    },
+    "README.md": {
+      "chars": 1335,
+      "hash": "e74dd70e0dd055d8",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:47:23.725152"
+    }
+  },
+  "stack": {
+    "frontend": "none",
+    "backend": "python",
+    "database": "none"
+  },
+  "file_tree": [
+    "main.py",
+    "README.md"
+  ]
+}

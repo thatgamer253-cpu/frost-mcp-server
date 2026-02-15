@@ -1,0 +1,99 @@
+{
+  "project": "sovereign_system_dashboard",
+  "generated_at": "2026-02-15T05:53:08.481475",
+  "total_files": 12,
+  "total_chars": 51366,
+  "files": {
+    "main.py": {
+      "chars": 539,
+      "hash": "05a1cff5f331f937",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:10.999084"
+    },
+    "ui.py": {
+      "chars": 2105,
+      "hash": "914f13a8d6e255b7",
+      "reviews": 2,
+      "written_at": "2026-02-15T05:44:22.673675"
+    },
+    "monitor.py": {
+      "chars": 1246,
+      "hash": "4b8f85fcbd861e22",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:25.621140"
+    },
+    "database.py": {
+      "chars": 2351,
+      "hash": "238c46ec7367fb44",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:31.243525"
+    },
+    "controller.py": {
+      "chars": 1455,
+      "hash": "07e426cd765cea90",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:35.231692"
+    },
+    "requirements.txt": {
+      "chars": 27,
+      "hash": "3badc63c01fb4871",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:36.543888"
+    },
+    "install.sh": {
+      "chars": 640,
+      "hash": "d0f414b7236786a4",
+      "reviews": 3,
+      "written_at": "2026-02-15T05:44:49.817628"
+    },
+    "SovereignSystemDashboard.desktop": {
+      "chars": 269,
+      "hash": "69cc6222908219f4",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:51.870368"
+    },
+    "icon.svg": {
+      "chars": 425,
+      "hash": "373de70c2b320223",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:44:57.086055"
+    },
+    "README.md": {
+      "chars": 73,
+      "hash": "15ccaf77dd6a082e",
+      "reviews": 3,
+      "written_at": "2026-02-15T05:45:18.974849"
+    },
+    "setup.py": {
+      "chars": 408,
+      "hash": "1d30c03b28f7670b",
+      "reviews": 3,
+      "written_at": "2026-02-15T05:45:34.013342"
+    },
+    "AppImageManifest.yml": {
+      "chars": 40955,
+      "hash": "871c98e0de9de304",
+      "reviews": 1,
+      "written_at": "2026-02-15T05:47:34.045675"
+    }
+  },
+  "stack": {
+    "frontend": "PyQt6",
+    "backend": "Python 3.11+",
+    "database": "SQLite"
+  },
+  "file_tree": [
+    "main.py",
+    "ui.py",
+    "monitor.py",
+    "database.py",
+    "controller.py",
+    "requirements.txt",
+    "install.sh",
+    "SovereignSystemDashboard.desktop",
+    "icon.svg",
+    "README.md",
+    "setup.py",
+    "AppImageManifest.yml"
+  ]
+}

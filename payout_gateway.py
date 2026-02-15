@@ -31,10 +31,10 @@ class PayoutGateway:
                     "description": "Project Frost Job Earning Payout"
                 }
                 
-                if destination and destination != "connected_cashapp_user":
+                if destination and not destination.startswith("acct_") and destination != "connected_cashapp_user":
                     payout_params["destination"] = destination
                 else:
-                    print(f"[Gateway] Using default Stripe payout destination (placeholder detected: {destination})")
+                    print(f"[Gateway] Using default Stripe payout destination (Account ID or placeholder detected: {destination})")
 
                 payout = stripe.Payout.create(**payout_params)
                 return {"status": "success", "id": payout.id}

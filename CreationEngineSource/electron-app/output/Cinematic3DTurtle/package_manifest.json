@@ -1,0 +1,62 @@
+{
+  "project": "Cinematic3DTurtle",
+  "generated_at": "2026-02-15T03:25:09.274452",
+  "total_files": 9,
+  "total_chars": 16744,
+  "files": {
+    "main.py": {
+      "chars": 700,
+      "hash": "647f0c8367e5daea",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:49:26.730533"
+    },
+    "turtle_engine.py": {
+      "chars": 2237,
+      "hash": "b181aa967af0fac2",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:49:30.616872"
+    },
+    "camera.py": {
+      "chars": 2010,
+      "hash": "2cbaf4c845332470",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:49:37.395421"
+    },
+    "setup.py": {
+      "chars": 676,
+      "hash": "00a2f02a39769005",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:49:54.727056"
+    },
+    "README.md": {
+      "chars": 2122,
+      "hash": "72c92fe4caa9ff28",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:52:27.429205"
+    },
+    "3d_turtle/__init__.py": {
+      "chars": 1113,
+      "hash": "406ff5ee42276a65",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:52:34.163998"
+    },
+    "3d_turtle/ui.py": {
+      "chars": 2042,
+      "hash": "5d421635e3586432",
+      "reviews": 2,
+      "written_at": "2026-02-15T02:52:53.648357"
+    },
+    "3d_turtle/physics.py": {
+      "chars": 3640,
+      "hash": "ffe2d512b0da987b",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:53:02.841472"
+    },
+    "3d_turtle/parameters.py": {
+      "chars": 2204,
+      "hash": "ff3a8d72094d4fc6",
+      "reviews": 1,
+      "written_at": "2026-02-15T02:53:07.351209"
+    }
+  }
+}

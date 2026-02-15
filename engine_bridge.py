@@ -2,21 +2,39 @@ import os
 import sys
 import json
 import time
+import logging
+import traceback
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("frost-bridge")
+
 # Add Creator to path
-creator_path = r"c:\Users\thatg\Desktop\Creator"
-if creator_path not in sys.path:
-    # Insert at beginning to avoid collision with local files if they have same names
-    sys.path.insert(0, creator_path)
+# Try specific desktop path found in system check
+creator_path = os.getenv("CREATOR_PATH", r"c:\Users\thatg\Desktop\Creator")
+if not os.path.exists(creator_path):
+    creator_path = os.path.join(os.path.expanduser("~"), "Desktop", "Creator")
+
+if os.path.exists(creator_path):
+    if creator_path not in sys.path:
+        sys.path.insert(0, creator_path)
+else:
+    # Use the bundled source if Desktop path is missing (Cloud/Render Mode)
+    relative_path = os.path.join(os.getcwd(), "CreationEngineSource")
+    if os.path.exists(relative_path):
+        if relative_path not in sys.path:
+            sys.path.insert(0, relative_path)
+        logger.info(f"BRIDGE: Using bundled Creation Engine source at {relative_path}")
 
 try:
     from creation_engine.orchestrator import CreationEngine as AdvancedEngine
     _HAS_ADVANCED = True
 except ImportError:
-    print("WARNING: Advanced Creation Engine not found at Desktop/Creator. Falling back to swarm-local engine.")
+    if os.getenv("AGENT_MODE") != "production":
+        print(f"WARNING: Advanced Creation Engine not found at {creator_path}. Falling back to swarm-local engine.")
     _HAS_ADVANCED = False
     from swarm_creation_engine import CreationEngine as SwarmLocalEngine
 

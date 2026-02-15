@@ -1,12 +1,10 @@
 import os
 import json
 import time
-from scanner import JobScanner
-from intelligence import JobEvaluator
-from generator import MaterialGenerator
 from work_engine import WorkEngine
 from auto_submitter import AutoSubmitter
 from guardian import guardian
+import marketing_engine
 
 def load_all_profiles():
     profiles_dir = 'profiles'
@@ -28,17 +26,12 @@ def load_all_profiles():
                 except: pass
     return profiles
 
-def run_agent_loop(profile, scanner, submitter):
+def run_agent_loop(profile, submitter):
     guardian.log_activity(f"AGENT START: {profile.get('name')} [{profile.get('title')}]")
-    evaluator = JobEvaluator(profile)
-    generator = MaterialGenerator(profile)
-    worker = WorkEngine(profile)
-
-    strat_name = profile.get("settings", {}).get("strategy", "Standard")
     is_closer = any(kw in profile.get("title", "") for kw in ["Diplomac", "Social", "Diplomat", "Merchant"])
 
     if is_closer:
-        guardian.log_activity(f"[{profile.get('name')}] DIPLOMAT MODE: Checking messages & closing...")
+        guardian.log_activity(f"[{profile.get('name')}] DIPLOMAT MODE: Checking messages & marketplace...")
         submitter.check_messages("LinkedIn")
         submitter.check_messages("Upwork")
         
@@ -62,55 +55,21 @@ def run_agent_loop(profile, scanner, submitter):
                                     guardian.log_activity(f"[{profile.get('name')}] MERCHANT: SALE CONFIRMED! Project {item} sold for ${amount:.2f}.")
                                     guardian.send_social_message(profile.get("name"), f"💰 MARKETPLACE SALE! Just finalized ${amount:.2f} for project '{item}'. Funds moved to Stripe Balance.")
                         except: pass
-
-        # CLOSER PROTOCOL: Process saved leads
-        filename = 'found_jobs.json'
-        if os.path.exists(filename):
-            try:
-                with open(filename, 'r') as f:
-                    saved_jobs = json.load(f)
-                
-                applied_file = 'applied_ledger.json'
-                applied = []
-                if os.path.exists(applied_file):
-                    with open(applied_file, 'r') as f:
-                        try: applied = json.load(f)
-                        except: pass
-
-                leads = [j for j in saved_jobs if (j.get('score', 0) >= 85 or j.get('manual_push')) and j['id'] not in applied]
-                if leads:
-                    guardian.log_activity(f"[{profile.get('name')}] DIPLOMAT: Found {len(leads)} fresh elite leads.")
-                    for job in leads[:2]: # Small batch per agent
-                        # 1. Generate Material
-                        guardian.log_activity(f"[{profile.get('name')}] Closing lead '{job['title']}'...")
-                        letter = generator.generate_cover_letter(job)
-                        generator.save_application(job, letter)
-                        
-                        # 2. Generate Proof of Concept (The 'Work' / Engine Hand-off)
-                        poc = worker.generate_poc(job)
-                        poc_path = worker.package_deliverable(job, poc)
-                        
-                        # 3. Auto-Submit
-                        success, msg = submitter.submit_proposal(job, letter, poc_path)
-                        guardian.log_activity(f"[{profile.get('name')}] DIPLOMAT STATUS: {msg}")
-            except Exception as e:
-                guardian.log_activity(f"[{profile.get('name')}] DIPLOMAT ERROR: {str(e)}", "WARNING")
-    else:
-        guardian.log_activity(f"[{profile.get('name')}] HUNTER MODE: Starting scan for {strat_name} strategy...")
-        try:
-            jobs = scanner.scan_all(profile)
-            for job in jobs:
-                score, reasoning = evaluator.evaluate(job)
-                saved = evaluator.save_interesting_job(job, score, reasoning)
-                if saved and score >= 85:
-                    guardian.log_activity(f"[{profile.get('name')}] identified elite match: {job['title']}")
-                    guardian.send_social_message(profile.get("name"), f"🚀 Found ELITE match: {job['title']} ({score}%)")
-        except Exception as e:
-            guardian.log_activity(f"[{profile.get('name')}] SCANNER ERROR: {str(e)}")
+    
+    # GLOBAL MARKETING: All agents promote marketplace services and the Creation Engine
+    from marketing_engine import MarketingEngine
+    marketer = MarketingEngine(profile)
+    
+    guardian.log_activity(f"[{profile.get('name')}] MARKETING: Generating outreach campaign...")
+    try:
+        campaign = marketer.generate_campaign()
+        if campaign:
+            marketer.execute_social_outreach(campaign)
+    except Exception as e:
+        guardian.log_activity(f"[{profile.get('name')}] MARKETING ERROR: {str(e)}")
 
 def main():
-    guardian.log_activity("--- Project Frost HIVE Mode Initialized ---")
-    scanner = JobScanner()
+    guardian.log_activity("--- Project Frost HIVE Mode Initialized [MARKETPLACE FOCUS] ---")
     submitter = AutoSubmitter()
     
     while True:
@@ -123,7 +82,7 @@ def main():
         guardian.log_activity(f"HIVE UPDATE: {len(profiles)} agents active in swarm.")
         for profile in profiles:
             try:
-                run_agent_loop(profile, scanner, submitter)
+                run_agent_loop(profile, submitter)
             except Exception as e:
                 guardian.log_activity(f"HIVE CRITICAL: Agent {profile.get('name')} failed: {str(e)}", "CRITICAL")
             

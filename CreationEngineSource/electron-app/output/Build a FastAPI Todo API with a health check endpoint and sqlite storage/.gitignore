@@ -1,0 +1,10 @@
+# Overlord-generated .gitignore
+__pycache__/
+*.pyc
+.env
+venv/
+node_modules/
+.overlord_state.json
+dist/
+build/
+*.egg-info/

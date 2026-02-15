@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVERLORD — Command Center</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── Reset & Base ─────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg-base: #050508;       /* Deep Space */
+        --bg-surface: rgba(18, 18, 28, 0.6);
+        --bg-card: rgba(30, 30, 45, 0.5); /* Lighter, bluer glass */
+        --bg-input: rgba(0, 0, 0, 0.3);
+        
+        --border: rgba(255, 255, 255, 0.1);
+        --border-glow: rgba(139, 92, 246, 0.5);
+        
+        --accent: #8b5cf6;        /* Vivid Violet */
+        --accent-glow: rgba(139, 92, 246, 0.4);
+        --accent-hover: #7c3aed;
+        
+        --cyan: #06b6d4;
+        --cyan-glow: #67e8f9;
+        --green: #10b981;
+        --red: #f43f5e;
+        
+        --text: #f1f5f9;
+        --text-dim: #94a3b8;
+        --text-mid: #cbd5e1;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg-base);
+        color: var(--text);
+        height: 100vh;
+        overflow: hidden;
+        -webkit-app-region: drag;
+      }
+
+      input, textarea, button, select, label, .sidebar, .main-panel, .library-grid {
+        -webkit-app-region: no-drag;
+      }
+
+      /* ── Layout ───────────────────────────────────────────── */
+      .app-grid {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: 1fr;
+        height: 100vh;
+      }
+
+      /* ── Glassmorphism Sidebar ──────────────────────────────── */
+      .sidebar {
+        background: rgba(10, 10, 15, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-right: 1px solid var(--border);
+        padding: 24px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        overflow-y: auto;
+      }
+
+      .sidebar::-webkit-scrollbar { width: 4px; }
+      .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+      .logo-group { margin-bottom: 20px; }
+      .logo { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
+      .logo-sub { font-size: 11px; color: var(--text-dim); }
+
+      .divider { height: 1px; background: var(--border); margin: 12px 0; }
+      .section-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin: 12px 0 8px; }
+
+      .field-label { font-size: 11px; font-weight: 600; margin-bottom: 4px; display: block; color: var(--text-mid); }
+      .field-input, .field-select {
+        width: 100%; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border);
+        border-radius: 6px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 11px;
+        outline: none; transition: all 0.2s; margin-bottom: 12px;
+      }
+      .field-input:focus, .field-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-glow); }
+
+      .checkbox-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; user-select: none; }
+      .checkbox-row input { accent-color: var(--accent); cursor: pointer; }
+      .checkbox-row label { font-size: 11px; cursor: pointer; color: var(--text-mid); }
+
+      /* ── Tab Bar ────────────────────────────────────────── */
+      .tab-bar {
+        display: flex;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        gap: 24px;
+        -webkit-app-region: drag;
+      }
+
+      .tab {
+        padding: 16px 4px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-dim);
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+        -webkit-app-region: no-drag;
+        position: relative;
+      }
+
+      .tab:hover { color: var(--text); }
+      .tab.active { color: var(--accent); border-bottom-color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+
+      /* ── Main Panel ───────────────────────────────────────── */
+      .main-panel {
+        display: flex;
+        flex-direction: column;
+        background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.05), transparent 400px), 
+                    radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.05), transparent 400px);
+        overflow: hidden;
+      }
+
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 24px;
+        gap: 12px;
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .view-container { display: none; flex-direction: column; gap: 20px; }
+      .view-container.active { display: flex; }
+
+      /* ── Pro Mode Toggle ── */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 32px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .switch input { opacity: 0; width: 0; height: 0; }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(255,255,255,0.05);
+        transition: .3s;
+        border: 1px solid var(--border);
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 10px;
+        width: 10px;
+        left: 3px;
+        bottom: 3px;
+        background-color: var(--text-dim);
+        transition: .3s;
+      }
+      input:checked + .slider { background-color: var(--accent-glow); border-color: var(--accent); }
+      input:checked + .slider:before { transform: translateX(14px); background-color: var(--accent); }
+      .slider.round { border-radius: 20px; }
+      .slider.round:before { border-radius: 50%; }
+
+      .engine-header {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        background: linear-gradient(135deg, var(--text) 0%, var(--text-dim) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .header-sub { color: var(--text-dim); font-size: 13px; margin-top: 4px; font-family: 'Inter', sans-serif; }
+
+      /* Build HUD HUD HUD */
+      .build-stats {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .hud-card {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        background: rgba(0,0,0,0.25);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hud-card::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+
+      .hud-card.cost::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+      .hud-card.cost .value { color: #34d399; text-shadow: 0 0 10px rgba(52, 211, 153, 0.3); }
+
+      .hud-card.time::before { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+      .hud-card.time .value { color: #22d3ee; text-shadow: 0 0 10px rgba(34, 211, 238, 0.3); }
+
+      .hud-card.files::before { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+      .hud-card.files .value { color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+
+      .hud-card.status::before { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+      .hud-card.status .value { color: var(--accent); }
+
+      /* Library Grid */
+      .library-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .project-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .project-card:hover { border-color: var(--accent); box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 15px var(--accent-glow); transform: translateY(-2px); }
+      .project-title { font-size: 15px; font-weight: 700; color: var(--text); }
+      .project-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 2px 6px; border-radius: 4px; background: rgba(139, 92, 246, 0.15); color: var(--accent-glow); border: 1px solid var(--accent-glow); }
+
+      /* Prompt Section */
+      .prompt-box {
+        width: 100%; height: 120px; padding: 12px 16px; background: var(--bg-input);
+        border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'JetBrains Mono', monospace;
+        font-size: 13px; line-height: 1.5; outline: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); resize: vertical;
+      }
+      .prompt-box:focus { border-color: var(--accent); box-shadow: 0 0 20px rgba(124, 58, 237, 0.15); }
+      
+      .feed-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 0; /* Important for flex child with overflow */
+      }
+      .feed-header {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-dim);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .feed-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); }
+
+      /* Console Section */
+      .console-container {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(5, 5, 8, 0.9);
+        display: flex; /* Horizontal split */
+        min-height: 0;
+      }
+      .console-pane {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        position: relative;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .console-pane:last-child { border-right: none; }
+      
+      .pane-header {
+        padding: 6px 16px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--text-dim);
+        display: flex;
+        justify-content: space-between;
+      }
+      .pane-header::after { content: "LIVE"; color: var(--accent); animation: blink 2s infinite; }
+      
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+      .console {
+        height: 100%;
+        padding: 20px;
+        overflow-y: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--text-mid);
+        position: relative;
+        z-index: 1;
+      }
+      .console::-webkit-scrollbar { width: 6px; }
+      .console::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+      /* CRT Effects */
+      .scanlines {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.3;
+      }
+      .console-glow {
+        position: absolute;
+        inset: 0;
+        box-shadow: 0 0 40px rgba(124, 58, 237, 0.05) inset;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      /* Persona Styles */
+      .log-entry { margin-bottom: 4px; display: flex; gap: 8px; animation: fadeIn 0.3s ease-out; }
+      .log-tag { font-weight: 700; text-transform: uppercase; padding: 0 4px; border-radius: 3px; flex-shrink: 0; }
+      .log-msg { flex: 1; }
+
+      .persona-architect { color: #22d3ee; text-shadow: 0 0 8px rgba(34, 211, 238, 0.4); }
+      .persona-engineer  { color: #fbbf24; text-shadow: 0 0 8px rgba(251, 191, 36, 0.4); }
+      .persona-reviewer  { color: #d946ef; text-shadow: 0 0 8px rgba(217, 70, 239, 0.4); }
+      .persona-system    { color: #94a3b8; }
+      .persona-success   { color: var(--green); text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); font-weight: 700; }
+      .persona-error     { color: var(--red); text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); }
+
+      /* Phase Stepper */
+      .phase-stepper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 12px;
+        background: rgba(30, 30, 45, 0.5);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+      .phase-step {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        z-index: 1;
+        opacity: 0.3;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: grayscale(1);
+      }
+      .phase-step.active {
+        opacity: 1;
+        filter: grayscale(0);
+        transform: scale(1.05);
+      }
+      .phase-step.completed {
+        opacity: 0.7;
+        filter: grayscale(0);
+      }
+      .step-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--bg-card);
+        border: 1.5px solid var(--border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: all 0.4s;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      }
+      .active .step-icon {
+        border-color: var(--accent);
+        box-shadow: 0 0 15px var(--accent-glow);
+        animation: stepPulse 2s infinite;
+      }
+      .completed .step-icon {
+        border-color: var(--green);
+        background: rgba(16, 185, 129, 0.1);
+        content: '✓';
+      }
+      .step-label {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-dim);
+      }
+      .active .step-label { color: var(--text-bright); }
+      .completed .step-label { color: var(--green); }
+
+      @keyframes stepPulse {
+        0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(124, 58, 237, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+      }
+
+      /* Actions */
+      .btn {
+        padding: 12px 24px; border: none; border-radius: 10px; font-family: 'JetBrains Mono', monospace;
+        font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+      }
+      .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
+      .btn-primary:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.1); box-shadow: 0 6px 20px var(--accent-glow); }
+      .btn-danger { background: var(--red); color: white; opacity: 0.8; }
+      .btn-danger:hover:not(:disabled) { opacity: 1; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+      .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+      /* File Preview Modal (Simplified) */
+      .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; }
+      .modal { background: var(--bg-surface); border: 1px solid var(--border); width: 90%; height: 80%; border-radius: 16px; display: flex; flex-direction: column; padding: 24px; gap: 16px; }
+      .modal-header { display: flex; justify-content: space-between; align-items: center; }
+      .modal-title { font-weight: 700; color: var(--accent); }
+      .modal-close { cursor: pointer; color: var(--text-dim); }
+      .preview-code { flex: 1; background: #050508; border-radius: 8px; padding: 16px; overflow: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); border: 1px solid var(--border); }
+
+      /* API Badges */
+      .api-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 4px;
+        text-align: center;
+        border-radius: 4px;
+        background: var(--bg-input);
+        color: var(--text-dim);
+        border: 1px solid var(--border);
+        text-transform: uppercase;
+        transition: all 0.2s;
+      }
+      .api-badge.active {
+        color: var(--green);
+        border-color: var(--green);
+        background: rgba(16, 185, 129, 0.1);
+      }
+      .api-badge.missing {
+        color: var(--red);
+        border-color: var(--red);
+        background: rgba(239, 110, 110, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-grid">
+      <!-- ═══ Sidebar ═══════════════════════════════════════════ -->
+      <aside class="sidebar">
+        <div class="logo-group" style="margin-bottom: 24px;">
+          <div class="logo">◈ OVERLORD</div>
+          <div class="logo-sub">Autonomous Creation Engine</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">Mission Configuration</div>
+
+        <label class="field-label">🛠️ Mode</label>
+        <select id="mode" class="field-select">
+          <option value="new" selected>✨ New Project</option>
+          <option value="upgrade">♻️ Upgrade Existing</option>
+          <option value="reverse">🔍 Reverse Engineering</option>
+        </select>
+
+        <label class="field-label">📁 Project Name</label>
+        <input id="projectName" class="field-input" type="text" value="GeneratedApp" placeholder="auto-generated" spellcheck="false" />
+
+        <div id="upgradeSection" style="display: none;">
+          <label class="field-label">📂 Source Path</label>
+          <input id="sourcePath" class="field-input" type="text" placeholder="/path/to/project" spellcheck="false" />
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <span class="field-label" style="margin: 0; font-size: 11px; text-transform: uppercase; color: var(--accent);">⚙️ Manual Control</span>
+          <label class="switch">
+            <input type="checkbox" id="proModeToggle">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <div id="proFeatures" style="display: none;">
+          <div class="divider"></div>
+          
+          <label class="field-label">🏗️ Scale</label>
+          <select id="scale" class="field-select">
+            <option value="auto" selected>🤖 Auto-Detect</option>
+            <option value="application">🏢 Full Application</option>
+            <option value="module">📜 Standalone Module</option>
+            <option value="prototype">🖼️ Raw Prototype</option>
+          </select>
+
+          <label class="field-label">⚙️ Build Phase</label>
+          <select id="phase" class="field-select">
+            <option value="auto" selected>🤖 Auto-Detect</option>
+            <option value="all">🚀 All Phases</option>
+            <option value="plan">📐 Phase 1: Planning</option>
+            <option value="code">⌨️ Phase 2: Coding</option>
+            <option value="verify">🧪 Phase 3: Verification</option>
+          </select>
+
+          <label class="field-label">🎯 Platform</label>
+          <select id="platform" class="field-select">
+            <option value="auto" selected>🤖 Auto-Detect</option>
+            <option value="python">🐍 Python</option>
+            <option value="android">🤖 Android</option>
+            <option value="linux">🐧 Linux</option>
+            <option value="studio">🎨 Studio</option>
+          </select>
+
+          <div class="divider"></div>
+
+          <label class="field-label">🧠 Model</label>
+          <select id="model" class="field-select">
+            <option value="auto" selected>🤖 Smart Routing</option>
+            <option value="gemini-2.0-pro-exp-02-05">gemini-2.0-pro</option>
+            <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+            <option value="gpt-4o">gpt-4o</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="claude-3-5-sonnet-20241022">claude-3.5-sonnet</option>
+          </select>
+
+          <div class="divider"></div>
+
+          <label class="field-label" style="display: flex; justify-content: space-between;">
+            💰 Max Budget
+            <span id="budgetVal" style="color: var(--green);">$5.00</span>
+          </label>
+          <input id="budgetId" class="field-input" type="range" min="1" max="50" value="5" oninput="budgetVal.textContent = '$' + this.value + '.00'" />
+
+          <label class="field-label">🔄 Max Fix Cycles</label>
+          <select id="fixCycles" class="field-select">
+            <option value="1">1 Cycle</option>
+            <option value="3" selected>3 Cycles</option>
+            <option value="5">5 Cycles</option>
+          </select>
+
+          <div class="divider"></div>
+
+          <div class="section-label">Build Options</div>
+          <div class="checkbox-row"><input type="checkbox" id="optDocker" checked /><label for="optDocker">Docker Sandbox</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optReadme" checked /><label for="optReadme">Generate README</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optDebug" checked /><label for="optDebug">Auto-Debug</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optSetup" checked /><label for="optSetup">Setup Scripts</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optVoice" /><label for="optVoice">Voice Briefing</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optClean" /><label for="optClean">Clean Output</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optNoBundle" /><label for="optNoBundle">Skip Bundling</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="optDecompile" /><label for="optDecompile">Decompile Assets</label></div>
+
+          <div class="divider"></div>
+
+          <div class="section-label" style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="toggleAdvanced()">
+            <span>Advanced Search</span>
+            <span id="advToggleIcon">⊕</span>
+          </div>
+          
+          <div id="advancedModels" style="display: none; padding-top: 8px;">
+            <label class="field-label">📐 Architect Model</label>
+            <select id="archModel" class="field-select">
+              <option value="" selected>🤖 Auto-Select</option>
+              <option value="gemini-2.0-pro-exp-02-05">gemini-2.0-pro</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="claude-3-5-sonnet-20241022">claude-3.5-sonnet</option>
+            </select>
+            
+            <label class="field-label">🔧 Engineer Model</label>
+            <select id="engModel" class="field-select">
+              <option value="" selected>🤖 Auto-Select</option>
+              <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="groq/llama-3.1-70b-versatile">llama-3.1 (Groq)</option>
+            </select>
+            
+            <label class="field-label">👁️ Review Model</label>
+            <select id="reviewModel" class="field-select">
+              <option value="" selected>🤖 Auto-Select</option>
+              <option value="claude-3-5-sonnet-20241022">claude-3.5-sonnet</option>
+              <option value="gemini-2.0-pro-exp-02-05">gemini-2.0-pro</option>
+              <option value="gpt-4o">gpt-4o</option>
+            </select>
+
+            <label class="field-label">Cheap/Local Model</label>
+            <select id="localModel" class="field-select">
+              <option value="" selected>🤖 Auto-Select</option>
+              <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="llama3.1">ollama/llama3.1</option>
+            </select>
+
+            <label class="field-label">🎯 Focus Target</label>
+            <input id="focus" class="field-input" type="text" placeholder="e.g. database, auth" spellcheck="false" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">API Status</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px;">
+          <div class="api-badge" id="key-openai">OpenAI</div>
+          <div class="api-badge" id="key-gemini">Gemini</div>
+          <div class="api-badge" id="key-anthropic">Anthropic</div>
+          <div class="api-badge" id="key-groq">Groq</div>
+        </div>
+      </aside>
+
+      <!-- ═══ Main Panel ════════════════════════════════════════ -->
+      <main class="main-panel">
+        <nav class="tab-bar">
+          <div class="tab active" data-tab="build">🚀 Build</div>
+          <div class="tab" data-tab="library">📚 Library</div>
+          <div class="tab" data-tab="dashboard">📊 Dashboard</div>
+        </nav>
+
+        <div class="main-content">
+          <!-- 🚀 Build View -->
+          <div id="viewBuild" class="view-container active">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+              <div>
+                <h1 class="engine-header">OVERLORD ENGINE</h1>
+                <p class="header-sub">Autonomous Program Synthesis & Deployment</p>
+              </div>
+              <div class="build-stats">
+                <div class="hud-card cost">
+                  <span class="label">BUDGET USED:</span>
+                  <span id="liveCost" class="value">$0.00</span>
+                </div>
+                <div class="hud-card time">
+                  <span class="label">RUNTIME:</span>
+                  <span id="liveTime" class="value">0:00</span>
+                </div>
+                <div class="hud-card files">
+                  <span class="label">FILES:</span>
+                  <span id="statFiles" class="value">0</span>
+                </div>
+                <div class="hud-card status" id="statusBadge">
+                  <span class="label">SYSTEM:</span>
+                  <span id="statusText" class="value">STANDBY</span>
+                  <div id="statusDot" class="status-dot standby"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="prompt-container">
+              <label class="field-label" style="display: flex; justify-content: space-between;">
+                Mission Prompt
+                <span style="font-size: 9px; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px;">Ctrl+Enter to Execute</span>
+              </label>
+              <textarea id="promptInput" class="prompt-box" placeholder="Describe your vision... (e.g. 'Build a 2D RPG game', 'Create a cinematic robot short', or 'Developer's dashboard')"></textarea>
+            </div>
+
+            <!-- Process in Motion: Phase Stepper -->
+            <div id="phaseStepper" class="phase-stepper">
+              <div class="phase-step" id="step-briefing">
+                <div class="step-icon">📝</div>
+                <div class="step-label">Briefing</div>
+              </div>
+              <div class="phase-step" id="step-architect">
+                <div class="step-icon">📐</div>
+                <div class="step-label">Architect</div>
+              </div>
+              <div class="phase-step" id="step-engineer">
+                <div class="step-icon">🔧</div>
+                <div class="step-label">Engineer</div>
+              </div>
+              <div class="phase-step" id="step-reviewer">
+                <div class="step-icon">👁️</div>
+                <div class="step-label">Reviewer</div>
+              </div>
+              <div class="phase-step" id="step-complete">
+                <div class="step-icon">🚀</div>
+                <div class="step-label">Complete</div>
+              </div>
+            </div>
+
+            <div class="feed-container">
+              <div class="feed-header">
+                <div id="feedDot" class="feed-dot" style="background:var(--green); box-shadow:0 0 10px var(--green);"></div>
+                LIVE SYSTEM FEED
+              </div>
+              <div class="console-container">
+                <div class="scanlines"></div>
+                <div class="console-glow"></div>
+                
+                <!-- Left Pane: System Logs -->
+                <div class="console-pane">
+                  <div class="pane-header">SYSTEM HEARTBEAT</div>
+                  <div id="console" class="console"></div>
+                </div>
+
+                <!-- Right Pane: Code Synthesis -->
+                <div class="console-pane">
+                  <div class="pane-header">SYNTHESIS MATRIX</div>
+                  <div id="synthesis" class="console"></div>
+                </div>
+              </div>
+            </div>
+
+            <footer class="action-row" style="display: flex; gap: 12px; margin-top: 10px;">
+              <button id="btnBuild" class="btn btn-primary" style="flex: 1;">🚀 Launch Mission</button>
+              <button id="btnCancel" class="btn btn-danger" style="width: 140px;" disabled>🛑 Abort</button>
+            </footer>
+
+            <div id="fileTree" class="console" style="height: 100px; font-size: 11px; margin-top: 10px; display: none;">No active session.</div>
+          </div>
+
+          <!-- LIBRARY VIEW -->
+          <div id="viewLibrary" class="view-container">
+            <header>
+              <h1 class="engine-header">Project Library</h1>
+              <p class="header-sub">Explore and manage your generated projects</p>
+            </header>
+            <div id="libraryGrid" class="library-grid">
+              <!-- Dynamically populated -->
+              <div class="header-sub">Scanning output directory...</div>
+            </div>
+          </div>
+
+          <!-- DASHBOARD VIEW -->
+          <div id="viewDashboard" class="view-container">
+            <header>
+              <h1 class="engine-header">Mission Control</h1>
+              <p class="header-sub">Cumulative fleet analytics and performance</p>
+            </header>
+            <section class="bento-grid">
+              <div class="stat-card">
+                <div id="dashTotalProjects" class="stat-value">0</div>
+                <div class="stat-label">Total Projects</div>
+              </div>
+              <div class="stat-card">
+                <div id="dashTotalFiles" class="stat-value">0</div>
+                <div class="stat-label">Total Files Written</div>
+              </div>
+              <div class="stat-card">
+                <div id="dashTotalCost" class="stat-value">$0.00</div>
+                <div class="stat-label">Cumulative Cost</div>
+              </div>
+              <div class="stat-card">
+                <div id="dashSuccessRate" class="stat-value">0%</div>
+                <div class="stat-label">Success Rate</div>
+              </div>
+            </section>
+            <div class="section-label">Cost Distribution</div>
+            <div class="chart-container">Cost Over Time (Simulated Chart)</div>
+            <div class="section-label">Activity Log</div>
+            <div id="dashActivityLog" class="console" style="height: 150px;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewOverlay" class="overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <div id="previewTitle" class="modal-title">file_preview.py</div>
+          <div id="closePreview" class="modal-close">✕ Close</div>
+        </div>
+        <pre id="previewContent" class="preview-code"></pre>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

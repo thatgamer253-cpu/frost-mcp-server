@@ -1,0 +1,7 @@
+requests
+fastapi
+sqlite3
+jellyfish
+configparser
+beautifulsoup4
+name_analysis_module

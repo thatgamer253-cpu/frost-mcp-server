@@ -1,0 +1,55 @@
+{
+  "name": "overlord-agent",
+  "version": "2.0.0",
+  "main": "main.js",
+  "description": "Overlord - Autonomous Program Builder",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win portable",
+    "build:mac": "electron-builder --mac dmg",
+    "build:linux": "electron-builder --linux AppImage"
+  },
+  "dependencies": {
+    "electron": "^28.0.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.overlord.agent",
+    "productName": "Overlord",
+    "files": [
+      "main.js",
+      "renderer.js",
+      "index.html",
+      "package.json",
+      "settings.json"
+    ],
+    "extraResources": [
+      "agent_brain.py",
+      "bundler_agent.py",
+      "maintenance_steward.py",
+      "create.py",
+      "local_overlord.py",
+      "overlord_orchestrator.py",
+      "media_engine.py",
+      "wisdom_db.json",
+      "stable_gold_stacks.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "main.py": {
+    "functions": [
+      "main()"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "import sys",
+      "from PyQt5.QtWidgets import QApplication, QMainWindow",
+      "from ui import MainUI",
+      "from logging import setup_logging"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "turtle_engine.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "TurtleEngine",
+        "methods": [
+          "__init__",
+          "parse_command",
+          "move",
+          "turn",
+          "set_pen",
+          "generate_pattern",
+          "get_path"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import math",
+      "from typing import List, Tuple"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "camera.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "Camera",
+        "methods": [
+          "__init__",
+          "move",
+          "rotate",
+          "get_view_matrix"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "from typing import Tuple",
+      "import math"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "setup.py": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "from setuptools import setup, find_packages"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "README.md": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "3d_turtle/__init__.py": {
+    "functions": [],
+    "classes": [],
+    "variables": [
+      "__all__",
+      "parameters",
+      "camera",
+      "graphics_engine",
+      "physics_engine",
+      "collision_detector",
+      "main_ui",
+      "custom_widget",
+      "agent"
+    ],
+    "imports": [
+      "from agent import Agent",
+      "from camera import Camera",
+      "from collision import CollisionDetector",
+      "from graphics import GraphicsEngine",
+      "from ui import MainUI",
+      "from log import setup_logging",
+      "from physics import PhysicsEngine",
+      "from parameters import Parameters",
+      "from widgets import CustomWidget"
+    ],
+    "exports_all": [
+      "Agent",
+      "Camera",
+      "CollisionDetector",
+      "GraphicsEngine",
+      "MainUI",
+      "setup_logging",
+      "PhysicsEngine",
+      "Parameters",
+      "CustomWidget"
+    ],
+    "is_planned": false
+  },
+  "3d_turtle/ui.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "MainUI",
+        "methods": [
+          "__init__",
+          "initUI",
+          "log_message"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "from PyQt6.QtWidgets import QMainWindow, QDockWidget, QTextEdit, QVBoxLayout, QWidget, QLabel",
+      "from PyQt6.QtCore import Qt",
+      "from log import setup_logging",
+      "from widgets import CustomWidget"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "3d_turtle/physics.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "PhysicsEngine",
+        "methods": [
+          "__init__",
+          "apply_gravity",
+          "apply_friction",
+          "update_position",
+          "simulate"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import math",
+      "from typing import Tuple, List"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "3d_turtle/parameters.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "Parameters",
+        "methods": [
+          "__init__",
+          "load_settings",
+          "save_settings",
+          "get_setting",
+          "set_setting"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import json",
+      "import os"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  }
+}

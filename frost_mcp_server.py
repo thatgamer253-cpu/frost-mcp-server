@@ -10,6 +10,13 @@ from typing import Optional, List
 import os
 import json
 
+import traceback
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("frost-server")
+
 # Import your existing modules
 try:
     from api_key_manager import APIKeyManager
@@ -17,9 +24,11 @@ try:
     from generator import MaterialGenerator
     from revenue import RevenueManager
     from engine_bridge import creation_engine
-except ImportError as e:
-    print(f"Warning: Could not import module: {e}")
-    # Create mock classes for deployment
+    logger.info("Successfully imported all core modules.")
+except Exception as e:
+    logger.error(f"FATAL: Could not import core modules: {e}")
+    logger.error(traceback.format_exc())
+    # Create mock classes for deployment to prevent immediate crash
     class APIKeyManager:
         def validate_key(self, key, service): return True, "OK"
     class JobScanner:
@@ -32,6 +41,7 @@ except ImportError as e:
     class MockCreationEngine:
         def build_project(self, *args, **kwargs): return True, "applications/mock"
     creation_engine = MockCreationEngine()
+    logger.warning("Falling back to MOCK modules for deployment stability.")
 
 # Initialize
 app = FastAPI(title="Frost MCP Server", version="1.0.0")
@@ -139,12 +149,19 @@ async def generate_cover_letter(request: GenerateLetterRequest):
     try:
         # Load default profile
         profile_file = "profiles/ai_strategist_1771146284.json"
+        profile = {"name": "Professional", "skills": []}
+        
         if os.path.exists(profile_file):
             with open(profile_file, 'r') as f:
                 profile = json.load(f)
-        else:
-            # Use minimal profile
-            profile = {"name": "Professional", "skills": []}
+        elif os.path.exists("profiles"):
+            # Try to find any profile in the directory
+            profile_files = [f for f in os.listdir("profiles") if f.endswith(".json")]
+            if profile_files:
+                selected_profile = os.path.join("profiles", profile_files[0])
+                with open(selected_profile, 'r') as f:
+                    profile = json.load(f)
+                    print(f"[Server] Using alternative profile: {selected_profile}")
         
         # Create job object
         job = {

@@ -1,0 +1,22 @@
+{
+  "main.py": {
+    "functions": [
+      "count_to_ten()"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "import time"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "README.md": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  }
+}

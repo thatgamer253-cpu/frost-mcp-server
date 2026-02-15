@@ -220,40 +220,79 @@ with col_health:
 
     st.divider()
     st.markdown("### 💰 Financials")
-    st.metric("Wallet (Paid)", f"${rev_manager.data.get('total_paid', 0)}", delta=f"+${rev_manager.data.get('total_invoiced', 0)}")
+    # Core Metrics
+    m1, m2, m3, m4 = st.columns(4)
+    with m1:
+        st.metric("Agents Active", len(agents), "Stable") # Using actual agent count
+    with m2:
+        st.metric("Total Revenue", f"${rev_manager.data.get('total_earned', 0):.2f}", "Live")
+    with m3:
+        st.metric("Pending (WIP)", f"${rev_manager.data.get('pending_income', 0):.2f}", "Calculated")
+    with m4:
+        st.metric("Available Payout", f"${rev_manager.data.get('available_payout', 0):.2f}", "Ready")
     if st.button("💸 Trigger Payout"):
         st.success(rev_manager.request_payout())
 
 with col_leads:
-    st.markdown("### 🎯 Live Opportunity Feed")
-    if os.path.exists('found_jobs.json'):
-        with open('found_jobs.json', 'r') as f:
-            jobs = json.load(f)
-        if jobs:
-            # Sort and Filter: Show only jobs that haven't been manually pushed or already applied.
-            # We filter FIRST, then sort the remaining to keep the list clean.
-            filtered_jobs = [j for j in jobs if not j.get('manual_push')]
-            filtered_jobs = sorted(filtered_jobs, key=lambda x: x.get('score', 0), reverse=True)
+    st.markdown("### 📣 Marketing & Sales Feed")
+    
+    chat_history = get_hive_chat()
+    # Filter for marketing specific tags or phrases
+    marketing_events = [m for m in chat_history if "ADVERTISING:" in m['message'] or "MARKETING:" in m['message'] or "SALE CONFIRMED!" in m['message']]
+    
+    if marketing_events:
+        for event in reversed(marketing_events[-15:]):
+            icon = "💰" if "SALE" in event['message'] else "🚀"
+            color = "#3fb950" if "SALE" in event['message'] else "#00d4ff"
             
-            for job in filtered_jobs[:10]: # Increased visibility range
-                with st.expander(f"{job['title']} [{job['score']}%]"):
-                    st.markdown(f"**Company**: {job.get('company', 'Unknown')}")
-                    st.markdown(f"**Platform**: {job['platform']}")
-                    st.write(job['description'][:300] + "...")
-                    if st.button("🚀 Push to Diplomat", key=f"btn_{job['id']}"):
-                        # Mark as manually pushed in the file
-                        for j in jobs:
-                            if j['id'] == job['id']:
-                                j['manual_push'] = True
-                                break
-                        with open('found_jobs.json', 'w') as f:
-                            json.dump(jobs, f, indent=2)
-                        st.success(f"Lead '{job['title']}' pushed to Diplomat.")
-                        st.rerun()
-        else:
-            st.write("Hive is currently decrypting new leads...")
+            with st.container():
+                st.markdown(f"""
+                <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; border-left: 4px solid {color}; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #8b949e;">
+                        <span>{icon} {event['agent']}</span>
+                        <span>{event['timestamp']}</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.9em; white-space: pre-wrap;">{event['message']}</div>
+                </div>
+                """, unsafe_allow_html=True)
     else:
-        st.write("Waiting for Hunter scan sync...")
+        st.info("Waiting for autonomous marketing outreach...")
+
+    st.divider()
+    st.markdown("### 🌐 External Social (Moltbook/Agentverse)")
+    
+    social_log = 'external_social.log'
+    if os.path.exists(social_log):
+        with open(social_log, 'r') as f:
+            social_events = f.readlines()
+        
+        if social_events:
+            for event in reversed(social_events[-10:]):
+                st.markdown(f"""
+                <div style="background: rgba(139, 148, 158, 0.05); padding: 8px; border-radius: 8px; border-left: 3px solid #f472b6; margin-bottom: 5px; font-size: 0.8em;">
+                    {event.strip()}
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("Awaiting outbound external broadcasts...")
+    else:
+        st.info("Social engine initialized. Waiting for first campaign cycle.")
+
+    st.divider()
+    if os.path.exists('service_catalog.json'):
+        with open('service_catalog.json', 'r') as f:
+            catalog = json.load(f)
+        
+        for service in catalog.get('services', []):
+            st.markdown(f"""
+            <div style="background: rgba(0, 212, 255, 0.05); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.1); margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong style="color: #60a5fa;">{service['name']}</strong>
+                    <span style="font-size: 0.8em; background: rgba(0, 212, 255, 0.2); padding: 2px 6px; border-radius: 4px;">${service['price']}</span>
+                </div>
+                <div style="font-size: 0.7em; color: #8b949e; margin-top: 4px;">{service['description']}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 with col_intel:
     st.markdown("### 💬 Social Hive Chat")

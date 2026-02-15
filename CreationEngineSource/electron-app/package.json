@@ -1,0 +1,27 @@
+{
+  "name": "overlord-command-center",
+  "version": "2.0.0",
+  "description": "Overlord — Autonomous Program Builder (Electron + Python Bridge)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.overlord.commandcenter",
+    "productName": "Overlord",
+    "win": {
+      "target": "nsis"
+    },
+    "extraResources": [
+      {
+        "from": "agent_brain.py",
+        "to": "agent_brain.py"
+      }
+    ]
+  }
+}

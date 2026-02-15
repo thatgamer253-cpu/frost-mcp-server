@@ -1,0 +1,17 @@
+{
+  "budget": 5.0,
+  "total_cost": 0.030872,
+  "remaining": 4.969128,
+  "budget_exceeded": false,
+  "pivot_triggered": false,
+  "total_calls": 6,
+  "total_input_tokens": 6709,
+  "total_output_tokens": 2909,
+  "per_model": {
+    "local:llama3.2:3b": {
+      "cost": 0.030872,
+      "calls": 6,
+      "tokens": 9618
+    }
+  }
+}

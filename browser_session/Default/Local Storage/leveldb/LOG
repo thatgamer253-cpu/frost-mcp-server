@@ -1,6 +1,3 @@
-2026/02/15-10:22:25.521 98f8 Reusing MANIFEST C:\Users\thatg\Desktop\Frost\browser_session\Default\Local Storage\leveldb/MANIFEST-000001
-2026/02/15-10:22:25.525 98f8 Recovering log #12
-2026/02/15-10:22:25.525 98f8 Reusing old log C:\Users\thatg\Desktop\Frost\browser_session\Default\Local Storage\leveldb/000012.log 
-2026/02/15-10:22:40.952 63a4 Level-0 table #17: started
-2026/02/15-10:22:40.955 63a4 Level-0 table #17: 17865 bytes OK
-2026/02/15-10:22:40.957 63a4 Delete type=0 #12
+2026/02/15-13:13:00.059 3abc Reusing MANIFEST C:\Users\thatg\Desktop\Frost\browser_session\Default\Local Storage\leveldb/MANIFEST-000001
+2026/02/15-13:13:00.064 3abc Recovering log #3
+2026/02/15-13:13:00.066 3abc Reusing old log C:\Users\thatg\Desktop\Frost\browser_session\Default\Local Storage\leveldb/000003.log 

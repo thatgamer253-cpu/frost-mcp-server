@@ -1,0 +1,24 @@
+# Configuration settings for the application
+
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  datefmt: '%Y-%m-%d %H:%M:%S'
+
+plugins:
+  directory: 'plugins'
+  auto_load: true
+
+task_manager:
+  max_concurrent_tasks: 5
+  retry_on_failure: true
+  retry_attempts: 3
+  retry_delay_seconds: 5
+
+error_handling:
+  log_traceback: true
+  notify_admin: false
+
+state_manager:
+  save_interval_seconds: 60
+  state_file: 'state.json'

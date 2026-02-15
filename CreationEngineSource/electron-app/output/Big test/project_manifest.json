@@ -1,0 +1,185 @@
+{
+  "app.py": {
+    "functions": [
+      "initialize_logging()",
+      "main()"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "import os",
+      "import logging",
+      "import yaml",
+      "from core.task_manager import TaskManager",
+      "from core.plugin_loader import PluginLoader",
+      "from core.state_manager import StateManager",
+      "from core.error_handler import ErrorHandler"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "core/__init__.py": {
+    "functions": [],
+    "classes": [],
+    "variables": [
+      "__all__"
+    ],
+    "imports": [
+      "from task_manager import TaskManager",
+      "from plugin_loader import PluginLoader",
+      "from state_manager import StateManager",
+      "from error_handler import ErrorHandler"
+    ],
+    "exports_all": [
+      "TaskManager",
+      "PluginLoader",
+      "StateManager",
+      "ErrorHandler"
+    ],
+    "is_planned": false
+  },
+  "core/base_tool.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "BaseTool",
+        "methods": [
+          "__init__",
+          "initialize",
+          "execute",
+          "shutdown"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "core/task_manager.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "TaskManager",
+        "methods": [
+          "__init__",
+          "add_task",
+          "execute_tasks",
+          "load_tasks_from_plugins"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "from collections import defaultdict",
+      "from core.base_tool import BaseTool",
+      "import logging"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "core/plugin_loader.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "PluginLoader",
+        "methods": [
+          "__init__",
+          "load_plugins",
+          "_load_plugin"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import os",
+      "import importlib.util",
+      "import logging",
+      "from core.base_tool import BaseTool"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "core/state_manager.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "StateManager",
+        "methods": [
+          "__init__",
+          "set_task_status",
+          "get_task_status",
+          "delete_task_status"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import sqlite3",
+      "from contextlib import closing"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "core/error_handler.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "ErrorHandler",
+        "methods": [
+          "handle_exception",
+          "_handle_file_not_found",
+          "_handle_connection_error",
+          "log_warning",
+          "log_info"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import logging",
+      "import traceback"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "tools/__init__.py": {
+    "functions": [
+      "initialize_tools()"
+    ],
+    "classes": [],
+    "variables": [
+      "logger",
+      "PLUGINS_DIRECTORY",
+      "state_manager",
+      "plugin_loader",
+      "task_manager"
+    ],
+    "imports": [
+      "import os",
+      "import logging",
+      "from state_manager import StateManager",
+      "from plugin_loader import PluginLoader",
+      "from task_manager import TaskManager",
+      "from error_handler import ErrorHandler"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "config.yaml": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "README.md": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  }
+}

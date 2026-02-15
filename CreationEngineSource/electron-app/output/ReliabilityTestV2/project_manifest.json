@@ -1,0 +1,178 @@
+{
+  "main.py": {
+    "functions": [
+      "main()"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "import sys",
+      "from PyQt6.QtWidgets import QApplication",
+      "from ui import CryptoPortfolioDashboard"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "ui.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "CryptoPortfolioDashboard",
+        "methods": [
+          "__init__",
+          "open_settings_dialog"
+        ]
+      },
+      {
+        "name": "SettingsDialog",
+        "methods": [
+          "__init__"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import os",
+      "from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QDialog, QFormLayout, QLineEdit, QDialogButtonBox",
+      "from PyQt6.QtCore import Qt"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "data_manager.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "DataManager",
+        "methods": [
+          "__init__",
+          "_connect_to_db",
+          "_create_tables",
+          "add_crypto",
+          "get_portfolio",
+          "update_crypto",
+          "delete_crypto",
+          "close_connection"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import sqlite3",
+      "from sqlite3 import Error",
+      "import os"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "api_client.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "CoinGeckoAPIClient",
+        "methods": [
+          "__init__",
+          "get_current_price",
+          "get_historical_price"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import requests"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "notification_manager.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "NotificationManager",
+        "methods": [
+          "__init__",
+          "send_notification",
+          "check_price_change",
+          "get_previous_price"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "from api_client import CoinGeckoAPIClient",
+      "import notify2"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "exporter.py": {
+    "functions": [],
+    "classes": [
+      {
+        "name": "Exporter",
+        "methods": [
+          "__init__",
+          "export_portfolio_to_csv",
+          "export_historical_prices_to_csv"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import csv",
+      "from datetime import datetime, timedelta",
+      "from api_client import CoinGeckoAPIClient",
+      "from data_manager import DataManager"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "requirements.txt": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "README.md": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  ".env.example": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "install.sh": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "crypto_portfolio_dashboard.desktop": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "flatpak_manifest.json": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  }
+}

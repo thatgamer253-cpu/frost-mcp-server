@@ -12,16 +12,37 @@ class JobScanner:
         self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
         self.session_dir = os.path.join(os.getcwd(), "browser_session")
 
+    def _launch_browser(self, p):
+        """Helper to launch browser with retry logic for locked sessions."""
+        max_retries = 3
+        temp_session = self.session_dir
+        
+        for i in range(max_retries):
+            try:
+                context = p.chromium.launch_persistent_context(
+                    temp_session,
+                    headless=True,
+                    user_agent=self.user_agent
+                )
+                return context
+            except Exception as e:
+                if "locked" in str(e).lower() or "in use" in str(e).lower():
+                    print(f"[Scanner] Session locked, retrying with unique path (Attempt {i+1}/{max_retries})...")
+                    import time
+                    temp_session = f"{self.session_dir}_{int(time.time())}_{i}"
+                else:
+                    raise e
+        
+        # Final fallback: use standard launch
+        print("[Scanner] Persistent session failed, using ephemeral browser.")
+        browser = p.chromium.launch(headless=True)
+        return browser.new_context(user_agent=self.user_agent)
+
     def scan_upwork(self, keywords):
         jobs = []
         with sync_playwright() as p:
-            # Use persistent context to inherit session
-            context = p.chromium.launch_persistent_context(
-                self.session_dir,
-                headless=True,
-                user_agent=self.user_agent
-            )
-            page = context.pages[0] if context.pages else context.new_page()
+            context = self._launch_browser(p)
+            page = context.pages[0] if hasattr(context, 'pages') and context.pages else context.new_page()
             
             for keyword in keywords:
                 print(f"Searching Upwork for: {keyword}")
@@ -58,13 +79,8 @@ class JobScanner:
         """Scans LinkedIn Jobs (public search)."""
         jobs = []
         with sync_playwright() as p:
-            # Use persistent context to inherit session
-            context = p.chromium.launch_persistent_context(
-                self.session_dir,
-                headless=True,
-                user_agent=self.user_agent
-            )
-            page = context.pages[0] if context.pages else context.new_page()
+            context = self._launch_browser(p)
+            page = context.pages[0] if hasattr(context, 'pages') and context.pages else context.new_page()
             
             for keyword in keywords:
                 print(f"Searching LinkedIn for: {keyword}")
@@ -104,13 +120,8 @@ class JobScanner:
         locations = ["sfbay", "austin", "newyork", "losangeles", "seattle"]
         
         with sync_playwright() as p:
-            # Use persistent context to inherit session
-            context = p.chromium.launch_persistent_context(
-                self.session_dir,
-                headless=True,
-                user_agent=self.user_agent
-            )
-            page = context.pages[0] if context.pages else context.new_page()
+            context = self._launch_browser(p)
+            page = context.pages[0] if hasattr(context, 'pages') and context.pages else context.new_page()
             
             for loc in locations:
                 for keyword in keywords:

@@ -1,0 +1,13 @@
+# Big test — Docker Compose (Overlord Setup Agent)
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: big-test
+    ports:
+      - "8000:8000"
+    # No env_file needed
+    restart: unless-stopped

@@ -4,6 +4,7 @@ class SearchStrategy(Enum):
     SCOUT = "Scout"         # Passive: Notification only
     SNIPER = "Sniper"       # High Matching: Deep personalization, manual approval
     MACHINE_GUN = "Machine Gun" # High Volume: Quick application, automated
+    MERCHANT = "Merchant"     # A2A Sales: Selling digital goods to other agents
 
 class StrategyManager:
     def __init__(self, strategy_type: SearchStrategy):
@@ -16,6 +17,8 @@ class StrategyManager:
             return {"min_score": 85, "auto_apply": False, "personalization_depth": "High"}
         elif self.strategy_type == SearchStrategy.MACHINE_GUN:
             return {"min_score": 60, "auto_apply": True, "personalization_depth": "Low"}
+        elif self.strategy_type == SearchStrategy.MERCHANT:
+            return {"min_score": 50, "auto_apply": True, "personalization_depth": "Commercial"}
         return {"min_score": 80, "auto_apply": False}
 
     def should_apply(self, score):

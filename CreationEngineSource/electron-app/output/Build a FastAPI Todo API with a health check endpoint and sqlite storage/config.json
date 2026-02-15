@@ -1,0 +1,15 @@
+{
+    "api_keys": {
+        "nationalize_api_key": "your_actual_nationalize_api_key",
+        "agify_api_key": "your_actual_agify_api_key"
+    },
+    "cache_settings": {
+        "db_path": "cache.db"
+    },
+    "logging": {
+        "level": "ERROR"
+    },
+    "file_paths": {
+        "config_file_path": "config.json"
+    }
+}

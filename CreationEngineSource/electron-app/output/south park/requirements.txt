@@ -1,0 +1,10 @@
+manim
+gtts
+nltk
+fastapi
+uvicorn
+tkinter
+moviepy
+Pillow
+python-dotenv
+gTTS

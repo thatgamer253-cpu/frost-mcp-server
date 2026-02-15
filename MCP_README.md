@@ -26,7 +26,7 @@ An **MCP (Model Context Protocol) server** that exposes Frost's job scanning and
      "mcpServers": {
        "frost-job-tools": {
          "command": "python",
-         "args": ["c:\\Users\\thatg\\Desktop\\Frost\\frost_mcp_server.py"]
+         "args": ["python", "frost_mcp_server.py"]
        }
      }
    }

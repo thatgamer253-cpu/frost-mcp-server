@@ -1,0 +1,33 @@
+{
+  "project_name": "random_quote_generator",
+  "project_type": "script",
+  "mission_summary": "A simple Python script that prints a random inspirational quote.",
+  "files": [
+    {
+      "path": "main.py",
+      "task": "Entry point for the application; retrieves and prints a random inspirational quote."
+    },
+    {
+      "path": "config.py",
+      "task": "Stores configuration settings for the application, such as data file paths (if any)."
+    },
+    {
+      "path": "requirements.txt",
+      "task": "Lists Python package dependencies required to run the project."
+    },
+    {
+      "path": "README.md",
+      "task": "Provides an overview of the project, setup instructions, and how to run the script."
+    },
+    {
+      "path": "quotes_data.py",
+      "task": "Contains a list of inspirational quotes as Python data."
+    },
+    {
+      "path": "quote_service.py",
+      "task": "Provides functions to load quotes and select a random quote from the available data."
+    }
+  ],
+  "dependencies": [],
+  "run_command": "python main.py"
+}

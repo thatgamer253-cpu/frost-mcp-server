@@ -1,0 +1,92 @@
+{
+  "project": "south_park_episode_generator",
+  "generated_at": "2026-02-15T06:56:00.507320",
+  "total_files": 11,
+  "total_chars": 10152,
+  "files": {
+    "main.py": {
+      "chars": 1087,
+      "hash": "5f7ab62ba5768e2f",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:09.652971"
+    },
+    "animation.py": {
+      "chars": 795,
+      "hash": "1b4b4b5aac4e3722",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:11.863841"
+    },
+    "voice.py": {
+      "chars": 506,
+      "hash": "83ece96ee58dfeda",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:13.463856"
+    },
+    "script.py": {
+      "chars": 1896,
+      "hash": "acae3650ed37f14f",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:17.688527"
+    },
+    "scene.py": {
+      "chars": 2462,
+      "hash": "5d639f783b7c50fb",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:24.496373"
+    },
+    "ui.py": {
+      "chars": 1267,
+      "hash": "d247da87f77d1060",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:27.542701"
+    },
+    "export.py": {
+      "chars": 1532,
+      "hash": "534b80ea02fd9877",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:30.697500"
+    },
+    "requirements.txt": {
+      "chars": 38,
+      "hash": "f0b77bd75aa88478",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:32.119148"
+    },
+    "Dockerfile": {
+      "chars": 715,
+      "hash": "07ee8a7ebadb4209",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:34.503650"
+    },
+    "README.md": {
+      "chars": 55,
+      "hash": "ef55f61c6e611e74",
+      "reviews": 1,
+      "written_at": "2026-02-15T06:54:43.070313"
+    },
+    ".env.example": {
+      "chars": 862,
+      "hash": "4bc9370bd7c577c8",
+      "reviews": 3,
+      "written_at": "2026-02-15T06:54:53.738282"
+    }
+  },
+  "stack": {
+    "frontend": "TypeScript",
+    "backend": "FastAPI",
+    "database": "PostgreSQL"
+  },
+  "file_tree": [
+    "main.py",
+    "animation.py",
+    "voice.py",
+    "script.py",
+    "scene.py",
+    "ui.py",
+    "export.py",
+    "requirements.txt",
+    "Dockerfile",
+    "README.md",
+    ".env.example"
+  ]
+}

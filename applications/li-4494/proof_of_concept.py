@@ -1,25 +1,62 @@
 ```python
-# Proof of Concept for AI Engineer (Python, Gen AI)
-# Task: Develop a simple script that uses adversarially trained models to classify text
+# Python Script Template for AI Engineer (Python, Gen AI) Job
 
 # Import necessary libraries
-import numpy as np
-from transformers import pipeline
+import requests
+from bs4 import BeautifulSoup
+import openai
 
-# Load a pre-trained natural language processing pipeline for text classification
-# In this example, pipeline 'text-classification' is used, but could be 'text-generation', etc.
-classifier = pipeline('text-classification', model='roberta-base', tokenizer='roberta-base')
+# Function to scrape LinkedIn job listings for AI positions
+def scrape_linkedin_jobs(search_query):
+    """
+    Scrapes LinkedIn for job listings based on a search query.
+    
+    Args:
+    search_query (str): The query to search job listings.
+    
+    Returns:
+    list: A list of job titles and their links.
+    """
+    url = f"https://www.linkedin.com/jobs/search/?keywords={search_query}"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    jobs = []
+    for job in soup.select('li.result-card'):
+        title = job.select_one('h3').text.strip()
+        link = job.select_one('a.result-card__full-card-link')['href']
+        jobs.append({'title': title, 'link': link})
+        
+    return jobs
 
-# Define a sample text for classification
-text_to_classify = "Machine learning is a fascinating field of study. It enables systems to learn from data."
+# Function to generate AI-related text using OpenAI's GPT model
+def generate_ai_content(prompt, model="text-davinci-003", max_tokens=150):
+    """
+    Generates text using the OpenAI API.
+    
+    Args:
+    prompt (str): The prompt to generate text.
+    model (str): The OpenAI model to use.
+    max_tokens (int): Maximum number of tokens to generate.
+    
+    Returns:
+    str: Generated text from the prompt.
+    """
+    openai.api_key = 'your-openai-api-key'  # Ensure to set your OpenAI API key here
 
-# Use the model to classify the text
-result = classifier(text_to_classify)
+    response = openai.Completion.create(
+        engine=model,
+        prompt=prompt,
+        max_tokens=max_tokens
+    )
+    return response.choices[0].text.strip()
 
-# Print the classification result
-print(f"Text: {text_to_classify}")
-print("Classification Result:", result)
+# Example usage: Scrape LinkedIn for AI Engineer job listings and generate AI introduction text
+if __name__ == "__main__":
+    jobs = scrape_linkedin_jobs("AI Engineer")
+    print("Scraped Job Listings:", jobs)
 
-# This PoC demonstrates a basic setup for text classification using an adversarially
-# pre-trained model from the Hugging Face Transformers library.
+    prompt = "Write an introduction paragraph for an AI Engineer position."
+    ai_text = generate_ai_content(prompt)
+    print("Generated AI Text:", ai_text)
 ```

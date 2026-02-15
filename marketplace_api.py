@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException, Header, Depends
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, HTTPException, Header, Depends, Request
+from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel
 from typing import Optional, List
 import json
@@ -53,6 +53,53 @@ async def validate_api_key(
     return x_api_key
 
 # Discovery endpoint
+@app.get("/")
+async def root():
+    """Marketplace Root - Discovery Gateway."""
+    return HTMLResponse(content="""
+        <html>
+            <head>
+                <title>Frost Marketplace Gateway</title>
+                <style>
+                    body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; text-align: center; padding: 50px; }
+                    .container { max-width: 800px; margin: auto; background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+                    h1 { color: #3b82f6; font-size: 2.5em; margin-bottom: 20px; }
+                    .status { display: inline-block; background: #059669; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 30px; }
+                    .links { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+                    .card { background: #334155; padding: 20px; border-radius: 10px; text-decoration: none; color: white; transition: transform 0.2s; }
+                    .card:hover { transform: translateY(-5px); background: #475569; }
+                    .card h3 { margin-top: 0; color: #60a5fa; }
+                    code { background: #000; padding: 2px 5px; border-radius: 3px; color: #f472b6; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Project Frost Marketplace</h1>
+                    <div class="status">● LIVE MODE ACTIVE</div>
+                    <p>Programmatic API gateway for Autonomous Agent Services.</p>
+                    <div class="links">
+                        <a href="/services" class="card">
+                            <h3>/services</h3>
+                            <p>Browse available models, tools, and automation kits for your swarm.</p>
+                        </a>
+                        <a href="/docs" class="card">
+                            <h3>/docs</h3>
+                            <p>Interactive API documentation and schema definitions.</p>
+                        </a>
+                        <a href="/health" class="card">
+                            <h3>/health</h3>
+                            <p>System vitals and connectivity status.</p>
+                        </a>
+                        <div class="card">
+                            <h3>Stripe Webhook</h3>
+                            <p>Endpoint at <code>/webhook</code> is listening for verified payments.</p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+        </html>
+    """)
+
 @app.get("/services")
 async def list_services():
     """List all available services in the marketplace."""
@@ -76,8 +123,7 @@ async def get_service(service_id: str):
 # Purchase endpoint
 @app.post("/purchase")
 async def purchase_service(request: PurchaseRequest):
-    """Purchase a service and receive an API key."""
-    
+    """Purchase a service and get a Stripe Checkout URL."""
     # Find service
     service = next(
         (s for s in SERVICE_CATALOG["services"] if s["id"] == request.service_id),
@@ -87,57 +133,91 @@ async def purchase_service(request: PurchaseRequest):
         raise HTTPException(status_code=404, detail="Service not found")
     
     try:
-        # Create Stripe payment intent
-        if service["billing"] == "monthly":
-            # Create subscription
-            payment_intent = stripe.PaymentIntent.create(
-                amount=int(service["price"] * 100),
-                currency=service["currency"],
-                description=f"{service['name']} - Monthly Subscription",
-                metadata={
-                    "agent_id": request.agent_id,
-                    "service_id": service["id"]
-                }
-            )
-        else:
-            # One-time payment
-            payment_intent = stripe.PaymentIntent.create(
-                amount=int(service["price"] * 100),
-                currency=service["currency"],
-                description=f"{service['name']} - {service['billing']}",
-                metadata={
-                    "agent_id": request.agent_id,
-                    "service_id": service["id"]
-                }
-            )
+        # Determine base URL dynamically
+        scheme = request.url.scheme
+        host = request.headers.get("host")
+        base_url = f"{scheme}://{host}"
         
-        # Generate API key
-        api_key = key_manager.generate_key(
-            request.agent_id,
-            service["id"],
-            service["billing"]
-        )
-        
-        # Record revenue
-        revenue_manager.record_marketplace_sale(
-            service_id=service["id"],
-            service_name=service["name"],
-            amount=service["price"],
-            agent_id=request.agent_id
+        # Create Stripe Checkout Session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': service["currency"],
+                    'product_data': {
+                        'name': service["name"],
+                        'description': service["description"],
+                    },
+                    'unit_amount': int(service["price"] * 100),
+                },
+                'quantity': 1,
+            }],
+            mode='payment' if service["billing"] != "monthly" else 'subscription',
+            success_url=f"{base_url}/success?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{base_url}/cancel",
+            metadata={
+                "agent_id": request.agent_id,
+                "service_id": service["id"]
+            }
         )
         
         return {
             "success": True,
-            "api_key": api_key,
-            "service": service["name"],
-            "billing": service["billing"],
-            "amount": service["price"],
-            "payment_intent_id": payment_intent.id,
-            "endpoints": service["endpoints"]
+            "checkout_url": checkout_session.url,
+            "message": "Please complete payment at the checkout_url",
+            "agent_id": request.agent_id,
+            "service_id": service["id"]
         }
     
     except stripe.error.StripeError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/webhook")
+async def stripe_webhook(
+    request: Request,
+    stripe_signature: str = Header(None, alias="stripe-signature")
+):
+    """Handles Stripe Webhooks for payment fulfillment."""
+    payload = await request.body()
+    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, stripe_signature, webhook_secret
+        )
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=400)
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        
+        # Fulfill the purchase
+        metadata = session.get('metadata', {})
+        agent_id = metadata.get('agent_id')
+        service_id = metadata.get('service_id')
+        
+        if agent_id and service_id:
+            service = next((s for s in SERVICE_CATALOG["services"] if s["id"] == service_id), None)
+            if service:
+                # 1. Generate API key
+                api_key = key_manager.generate_key(
+                    agent_id,
+                    service["id"],
+                    service["billing"]
+                )
+                
+                # 2. Record revenue (REAL MONEY VERIFIED)
+                revenue_manager.record_marketplace_sale(
+                    service_id=service["id"],
+                    service_name=service["name"],
+                    amount=service["price"],
+                    agent_id=agent_id
+                )
+                
+                print(f"[Marketplace] FULFILLMENT SUCCESS: {service_id} for {agent_id}. Key: {api_key}")
+
+    return {"status": "success"}
 
 # Service endpoints
 @app.post("/api/scan")
@@ -230,6 +310,31 @@ async def optimize_profile(
             "Optimize for remote work keywords"
         ]
     }
+
+@app.get("/success")
+async def payment_success(session_id: str):
+    return HTMLResponse(content=f"""
+        <html>
+            <body style="font-family: sans-serif; text-align: center; padding-top: 50px; background: #0f172a; color: white;">
+                <h1 style="color: #4ade80;">Payment Successful!</h1>
+                <p>Your API key has been generated and sent to your agent.</p>
+                <p>Session ID: {session_id}</p>
+                <button onclick="window.close()" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close Window</button>
+            </body>
+        </html>
+    """)
+
+@app.get("/cancel")
+async def payment_cancel():
+    return HTMLResponse(content="""
+        <html>
+            <body style="font-family: sans-serif; text-align: center; padding-top: 50px; background: #0f172a; color: white;">
+                <h1 style="color: #f87171;">Payment Cancelled</h1>
+                <p>The transaction was not completed.</p>
+                <button onclick="window.close()" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Return to Safety</button>
+            </body>
+        </html>
+    """)
 
 # Health check
 @app.get("/health")

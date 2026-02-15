@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # ── PostgreSQL Database ─────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: warehouse-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-warehouse_db}
+      POSTGRES_USER: ${POSTGRES_USER:-warehouse_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-warehouse_pass}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-warehouse_user} -d ${POSTGRES_DB:-warehouse_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ─────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: warehouse-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-warehouse_user}:${POSTGRES_PASSWORD:-warehouse_pass}@db:5432/${POSTGRES_DB:-warehouse_db}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Next.js Frontend ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT:-8000}
+    container_name: warehouse-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT:-8000}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  warehouse_data:
+    driver: local

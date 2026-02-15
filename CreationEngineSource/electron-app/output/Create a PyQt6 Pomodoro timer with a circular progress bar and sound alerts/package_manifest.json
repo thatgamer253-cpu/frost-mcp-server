@@ -1,0 +1,114 @@
+{
+  "project": "name_analyzer",
+  "generated_at": "2026-02-15T08:51:06.230578",
+  "total_files": 15,
+  "total_chars": 13646,
+  "files": {
+    "main.py": {
+      "chars": 1228,
+      "hash": "04458faf7004ec94",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:49:04.888927"
+    },
+    "name_analysis.py": {
+      "chars": 1731,
+      "hash": "fb3a571114631aaf",
+      "reviews": 2,
+      "written_at": "2026-02-15T08:41:51.944066"
+    },
+    "cultural_origin.py": {
+      "chars": 957,
+      "hash": "4d50259c482a0436",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:41:54.783670"
+    },
+    "popularity_check.py": {
+      "chars": 973,
+      "hash": "2a89310c3ab08c22",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:41:56.931994"
+    },
+    "name_meaning.py": {
+      "chars": 965,
+      "hash": "cbf8f000b75df805",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:41:59.210660"
+    },
+    "utils.py": {
+      "chars": 861,
+      "hash": "42f3d0a1d666fd14",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:49:21.602395"
+    },
+    "README.md": {
+      "chars": 55,
+      "hash": "ef55f61c6e611e74",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:49:29.668440"
+    },
+    ".env.example": {
+      "chars": 478,
+      "hash": "87d5011794b0590f",
+      "reviews": 3,
+      "written_at": "2026-02-15T08:49:42.212603"
+    },
+    "requirements.txt": {
+      "chars": 52,
+      "hash": "ae9044f6de326d11",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:49:22.676687"
+    },
+    "name_analyzer.py": {
+      "chars": 1619,
+      "hash": "e5e70562a2dc3988",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:49:09.058155"
+    },
+    "data_fetcher.py": {
+      "chars": 1687,
+      "hash": "842a5b441b6e0009",
+      "reviews": 3,
+      "written_at": "2026-02-15T08:44:36.183608"
+    },
+    "compatibility.py": {
+      "chars": 1442,
+      "hash": "f52a05dac282dbb1",
+      "reviews": 3,
+      "written_at": "2026-02-15T08:45:03.040367"
+    },
+    "cache.py": {
+      "chars": 2090,
+      "hash": "39c0dce5e2ee8e93",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:49:13.358216"
+    },
+    "config.py": {
+      "chars": 861,
+      "hash": "1ac7bc5260212023",
+      "reviews": 2,
+      "written_at": "2026-02-15T08:49:19.144732"
+    },
+    "config.ini": {
+      "chars": 616,
+      "hash": "2f570123a29efa3b",
+      "reviews": 2,
+      "written_at": "2026-02-15T08:49:36.442706"
+    }
+  },
+  "stack": {
+    "frontend": "CLI",
+    "backend": "FastAPI",
+    "database": "SQLite"
+  },
+  "file_tree": [
+    "main.py",
+    "name_analyzer.py",
+    "cache.py",
+    "config.py",
+    "utils.py",
+    "requirements.txt",
+    "README.md",
+    "config.ini",
+    ".env.example"
+  ]
+}

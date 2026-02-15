@@ -1,0 +1,78 @@
+{
+  "project": "south_park_script_generator",
+  "generated_at": "2026-02-15T07:34:21.842044",
+  "total_files": 9,
+  "total_chars": 5955,
+  "files": {
+    "main.py": {
+      "chars": 778,
+      "hash": "9044b64e7dec40b2",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:25.015611"
+    },
+    "characters.py": {
+      "chars": 1367,
+      "hash": "ce3fa4880c96e7a1",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:28.783859"
+    },
+    "plot.py": {
+      "chars": 1238,
+      "hash": "fd44d84a0268e135",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:33.051645"
+    },
+    "dialogue.py": {
+      "chars": 952,
+      "hash": "430b249d84512b6f",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:36.458135"
+    },
+    "formatter.py": {
+      "chars": 1001,
+      "hash": "ecb0d4a84a966fd6",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:40.103791"
+    },
+    "requirements.txt": {
+      "chars": 21,
+      "hash": "c3b907a6112dbe02",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:44.020757"
+    },
+    "README.md": {
+      "chars": 55,
+      "hash": "ef55f61c6e611e74",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:51.965980"
+    },
+    "Dockerfile": {
+      "chars": 386,
+      "hash": "e70ea6b2ed7b2cf7",
+      "reviews": 1,
+      "written_at": "2026-02-15T07:33:53.931921"
+    },
+    ".env.example": {
+      "chars": 163,
+      "hash": "d24d3d5ca2b4b551",
+      "reviews": 3,
+      "written_at": "2026-02-15T07:34:01.492280"
+    }
+  },
+  "stack": {
+    "frontend": "CLI",
+    "backend": "FastAPI",
+    "database": "None"
+  },
+  "file_tree": [
+    "main.py",
+    "characters.py",
+    "plot.py",
+    "dialogue.py",
+    "formatter.py",
+    "requirements.txt",
+    "README.md",
+    "Dockerfile",
+    ".env.example"
+  ]
+}

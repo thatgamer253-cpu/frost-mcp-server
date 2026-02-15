@@ -1,0 +1,92 @@
+{
+  "project": "name_analyzer",
+  "generated_at": "2026-02-15T08:55:23.499384",
+  "total_files": 11,
+  "total_chars": 12644,
+  "files": {
+    "main.py": {
+      "chars": 1648,
+      "hash": "16fd5c894e02cb82",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:51:54.424989"
+    },
+    "name_analysis.py": {
+      "chars": 2509,
+      "hash": "50ae8525e1f978aa",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:52:00.243241"
+    },
+    "data_visualization.py": {
+      "chars": 819,
+      "hash": "0034ced7da2129db",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:52:03.554068"
+    },
+    "similarity.py": {
+      "chars": 1774,
+      "hash": "5566071d3e5c15c1",
+      "reviews": 2,
+      "written_at": "2026-02-15T08:52:11.087274"
+    },
+    "error_handling.py": {
+      "chars": 788,
+      "hash": "4b58a50c3dadb695",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:52:13.370798"
+    },
+    "cache.py": {
+      "chars": 2932,
+      "hash": "a4ac9cc092e2b815",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:52:17.693133"
+    },
+    "config.py": {
+      "chars": 1121,
+      "hash": "41c0694727c89a08",
+      "reviews": 2,
+      "written_at": "2026-02-15T08:52:23.191742"
+    },
+    "requirements.txt": {
+      "chars": 34,
+      "hash": "6fde376f5f0992a6",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:52:24.352251"
+    },
+    "README.md": {
+      "chars": 55,
+      "hash": "ef55f61c6e611e74",
+      "reviews": 1,
+      "written_at": "2026-02-15T08:52:31.346337"
+    },
+    ".env.example": {
+      "chars": 274,
+      "hash": "4ddd77520912a5c2",
+      "reviews": 3,
+      "written_at": "2026-02-15T08:52:36.693138"
+    },
+    "config.json": {
+      "chars": 325,
+      "hash": "7ee6571e81600cee",
+      "reviews": 3,
+      "written_at": "2026-02-15T08:52:48.241479"
+    }
+  },
+  "stack": {
+    "frontend": "CLI",
+    "backend": "FastAPI",
+    "database": "SQLite"
+  },
+  "file_tree": [
+    "main.py",
+    "name_analysis.py",
+    "data_visualization.py",
+    "similarity.py",
+    "error_handling.py",
+    "cache.py",
+    "config.py",
+    "requirements.txt",
+    "README.md",
+    ".env.example",
+    "config.json"
+  ]
+}

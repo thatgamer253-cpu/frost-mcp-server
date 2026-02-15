@@ -1,0 +1,116 @@
+{
+  "main.py": {
+    "functions": [
+      "main()"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "from dotenv import load_dotenv",
+      "import os",
+      "from script_generator import generate_script",
+      "from animation import create_animation",
+      "from audio import generate_audio",
+      "from video_compiler import compile_video"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "script_generator.py": {
+    "functions": [
+      "generate_script(topic)"
+    ],
+    "classes": [],
+    "variables": [
+      "OPENAI_API_KEY"
+    ],
+    "imports": [
+      "import os",
+      "import openai",
+      "from dotenv import load_dotenv"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "animation.py": {
+    "functions": [
+      "create_animation(script)"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "from manim import Scene, Text, FadeIn, FadeOut, Write",
+      "import os"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "audio.py": {
+    "functions": [
+      "generate_audio(frequency, duration, filename)"
+    ],
+    "classes": [
+      {
+        "name": "AudioGenerator",
+        "methods": [
+          "__init__",
+          "generate_sine_wave",
+          "save_wave_file"
+        ]
+      }
+    ],
+    "variables": [],
+    "imports": [
+      "import os",
+      "import numpy",
+      "import wave"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "video_compiler.py": {
+    "functions": [
+      "compile_video(animation_file, audio_file)"
+    ],
+    "classes": [],
+    "variables": [],
+    "imports": [
+      "from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips",
+      "import os"
+    ],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "requirements.txt": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "README.md": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  ".env.example": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  },
+  "Dockerfile": {
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "imports": [],
+    "exports_all": null,
+    "is_planned": false
+  }
+}

@@ -1,0 +1,348 @@
+{
+  "project_name": "financial-portfolio-tracker",
+  "project_type": "WEBSITE",
+  "mission_summary": "A secure web application for users to manage investment portfolios, track asset performance, and visualize holdings with real-time data simulation.",
+  "stack": {
+    "frontend": "Tailwind CSS, Jinja2, Vanilla JS/Alpine.js, Chart.js",
+    "backend": "FastAPI, SQLAlchemy, Pydantic",
+    "database": "SQLite"
+  },
+  "file_tree": [
+    ".dockerignore",
+    ".env.example",
+    ".gitignore",
+    "Dockerfile",
+    "README.md",
+    "alembic.ini",
+    "alembic/env.py",
+    "alembic/script.py.mako",
+    "alembic/versions/.gitkeep",
+    "backend/__init__.py",
+    "backend/api/__init__.py",
+    "backend/api/v1/__init__.py",
+    "backend/api/v1/api.py",
+    "backend/api/v1/endpoints/__init__.py",
+    "backend/api/v1/endpoints/auth.py",
+    "backend/api/v1/endpoints/dashboard.py",
+    "backend/api/v1/endpoints/health.py",
+    "backend/api/v1/endpoints/market.py",
+    "backend/api/v1/endpoints/portfolio.py",
+    "backend/api/v1/endpoints/transactions.py",
+    "backend/api/v1/endpoints/users.py",
+    "backend/api/v1/endpoints/watchlist.py",
+    "backend/config.py",
+    "backend/core/__init__.py",
+    "backend/core/exceptions.py",
+    "backend/core/logging_config.py",
+    "backend/core/middleware.py",
+    "backend/crud.py",
+    "backend/database.py",
+    "backend/dependencies.py",
+    "backend/models.py",
+    "backend/schemas.py",
+    "backend/security.py",
+    "backend/services/__init__.py",
+    "backend/services/backup_restore.py",
+    "backend/services/health_monitor.py",
+    "backend/services/market_data.py",
+    "backend/services/retry_logic.py",
+    "backend/services/watchdog.py",
+    "frontend/__init__.py",
+    "frontend/static/css/tailwind.css",
+    "frontend/static/js/alpine.min.js",
+    "frontend/static/js/auth.js",
+    "frontend/static/js/chart.min.js",
+    "frontend/static/js/dashboard.js",
+    "frontend/static/js/main.js",
+    "frontend/static/js/portfolio.js",
+    "frontend/static/js/transactions.js",
+    "frontend/static/js/user.js",
+    "frontend/static/js/watchlist.js",
+    "frontend/templates/auth/login.html",
+    "frontend/templates/auth/register.html",
+    "frontend/templates/base.html",
+    "frontend/templates/dashboard/index.html",
+    "frontend/templates/index.html",
+    "frontend/templates/portfolio/add_asset.html",
+    "frontend/templates/portfolio/edit_asset.html",
+    "frontend/templates/portfolio/index.html",
+    "frontend/templates/transactions/index.html",
+    "frontend/templates/user/profile.html",
+    "frontend/templates/user/settings.html",
+    "frontend/templates/watchlist/index.html",
+    "main.py",
+    "requirements.txt"
+  ],
+  "files": [
+    {
+      "path": ".dockerignore",
+      "task": "Defines files and directories to be excluded from the Docker build context."
+    },
+    {
+      "path": ".env.example",
+      "task": "Example environment variables for application configuration, including database URL, JWT secret, and other settings."
+    },
+    {
+      "path": ".gitignore",
+      "task": "Specifies intentionally untracked files to ignore for Git."
+    },
+    {
+      "path": "Dockerfile",
+      "task": "Defines the Docker image for the application, using python:3.12-slim, installing dependencies, and setting up the FastAPI server."
+    },
+    {
+      "path": "README.md",
+      "task": "Project overview, setup instructions, API documentation, and usage guide."
+    },
+    {
+      "path": "alembic.ini",
+      "task": "Configuration file for Alembic, the database migration tool."
+    },
+    {
+      "path": "alembic/env.py",
+      "task": "Alembic environment script for connecting to the database and running migrations."
+    },
+    {
+      "path": "alembic/script.py.mako",
+      "task": "Mako template for generating new Alembic migration scripts."
+    },
+    {
+      "path": "alembic/versions/.gitkeep",
+      "task": "Placeholder file to ensure the 'versions' directory is tracked by Git, even when empty."
+    },
+    {
+      "path": "backend/__init__.py",
+      "task": "Initializes the backend directory as a Python package."
+    },
+    {
+      "path": "backend/api/__init__.py",
+      "task": "Initializes the api directory as a Python package."
+    },
+    {
+      "path": "backend/api/v1/__init__.py",
+      "task": "Initializes the v1 API version directory as a Python package."
+    },
+    {
+      "path": "backend/api/v1/api.py",
+      "task": "Main API router for version 1, aggregating all endpoint routers."
+    },
+    {
+      "path": "backend/api/v1/endpoints/__init__.py",
+      "task": "Initializes the endpoints directory as a Python package."
+    },
+    {
+      "path": "backend/api/v1/endpoints/auth.py",
+      "task": "API endpoints for user registration, login, and JWT token management."
+    },
+    {
+      "path": "backend/api/v1/endpoints/dashboard.py",
+      "task": "API endpoint to retrieve aggregated portfolio data for the dashboard and charts."
+    },
+    {
+      "path": "backend/api/v1/endpoints/health.py",
+      "task": "Health check endpoint returning application status, uptime, version, and checks for DB/cache/disk."
+    },
+    {
+      "path": "backend/api/v1/endpoints/market.py",
+      "task": "API endpoint to fetch simulated real-time market data for assets."
+    },
+    {
+      "path": "backend/api/v1/endpoints/portfolio.py",
+      "task": "API endpoints for managing user assets (add, edit, delete, retrieve)."
+    },
+    {
+      "path": "backend/api/v1/endpoints/transactions.py",
+      "task": "API endpoints for managing asset transactions (buy/sell history)."
+    },
+    {
+      "path": "backend/api/v1/endpoints/users.py",
+      "task": "API endpoints for user profile management, including password changes."
+    },
+    {
+      "path": "backend/api/v1/endpoints/watchlist.py",
+      "task": "API endpoints for managing user watchlists (add, remove, retrieve assets)."
+    },
+    {
+      "path": "backend/config.py",
+      "task": "Pydantic-settings for loading application configuration from environment variables with sensible defaults."
+    },
+    {
+      "path": "backend/core/__init__.py",
+      "task": "Initializes the core directory as a Python package."
+    },
+    {
+      "path": "backend/core/exceptions.py",
+      "task": "Custom exception classes and FastAPI exception handlers for graceful error recovery."
+    },
+    {
+      "path": "backend/core/logging_config.py",
+      "task": "Configures structured logging for the application, including startup banner and consistent format."
+    },
+    {
+      "path": "backend/core/middleware.py",
+      "task": "Custom FastAPI middleware for request logging, response time tracking, and global error handling."
+    },
+    {
+      "path": "backend/crud.py",
+      "task": "Contains Create, Read, Update, Delete (CRUD) operations for database models, wrapped with try-except for error recovery."
+    },
+    {
+      "path": "backend/database.py",
+      "task": "Configures SQLAlchemy engine, session, and base for database interaction, including auto-reconnect logic."
+    },
+    {
+      "path": "backend/dependencies.py",
+      "task": "FastAPI dependency injection functions, e.g., for getting a database session or current authenticated user."
+    },
+    {
+      "path": "backend/models.py",
+      "task": "SQLAlchemy ORM models defining the database schema for users, assets, transactions, and watchlist items."
+    },
+    {
+      "path": "backend/schemas.py",
+      "task": "Pydantic models for request payload validation and API response serialization, ensuring data integrity."
+    },
+    {
+      "path": "backend/security.py",
+      "task": "Handles password hashing (bcrypt) and JWT token creation, encoding, and decoding."
+    },
+    {
+      "path": "backend/services/__init__.py",
+      "task": "Initializes the services directory as a Python package."
+    },
+    {
+      "path": "backend/services/backup_restore.py",
+      "task": "Utility functions for creating database `.bak` snapshots before critical mutations and managing atomic writes."
+    },
+    {
+      "path": "backend/services/health_monitor.py",
+      "task": "Background thread for continuous internal health monitoring, logging system status every 60 seconds."
+    },
+    {
+      "path": "backend/services/market_data.py",
+      "task": "Mock service to simulate real-time market prices for various asset types."
+    },
+    {
+      "path": "backend/services/retry_logic.py",
+      "task": "Decorator for implementing retry with exponential backoff for external calls (DB, API, file I/O)."
+    },
+    {
+      "path": "backend/services/watchdog.py",
+      "task": "Background monitor thread to check disk space, memory usage, and process health, logging anomalies."
+    },
+    {
+      "path": "frontend/__init__.py",
+      "task": "Initializes the frontend directory as a Python package."
+    },
+    {
+      "path": "frontend/static/css/tailwind.css",
+      "task": "Compiled Tailwind CSS output file, providing utility-first styling for the frontend."
+    },
+    {
+      "path": "frontend/static/js/alpine.min.js",
+      "task": "Alpine.js library for lightweight client-side interactivity."
+    },
+    {
+      "path": "frontend/static/js/auth.js",
+      "task": "Client-side JavaScript for handling user registration, login, and session management."
+    },
+    {
+      "path": "frontend/static/js/chart.min.js",
+      "task": "Chart.js library for rendering interactive data visualizations like the portfolio distribution chart."
+    },
+    {
+      "path": "frontend/static/js/dashboard.js",
+      "task": "Client-side JavaScript for fetching dashboard data, updating metrics, and rendering Chart.js visualizations."
+    },
+    {
+      "path": "frontend/static/js/main.js",
+      "task": "Global client-side JavaScript for dark mode toggle, toast notifications, and general UI interactions."
+    },
+    {
+      "path": "frontend/static/js/portfolio.js",
+      "task": "Client-side JavaScript for managing assets (add, edit, delete) and displaying portfolio details."
+    },
+    {
+      "path": "frontend/static/js/transactions.js",
+      "task": "Client-side JavaScript for displaying and filtering transaction history."
+    },
+    {
+      "path": "frontend/static/js/user.js",
+      "task": "Client-side JavaScript for user profile updates and settings management."
+    },
+    {
+      "path": "frontend/static/js/watchlist.js",
+      "task": "Client-side JavaScript for managing and displaying the user's watchlist."
+    },
+    {
+      "path": "frontend/templates/auth/login.html",
+      "task": "Jinja2 template for the user login page, styled with Tailwind CSS."
+    },
+    {
+      "path": "frontend/templates/auth/register.html",
+      "task": "Jinja2 template for the user registration page, styled with Tailwind CSS."
+    },
+    {
+      "path": "frontend/templates/base.html",
+      "task": "Base Jinja2 template providing the common HTML structure, including Tailwind CSS, navigation, and dark mode toggle."
+    },
+    {
+      "path": "frontend/templates/dashboard/index.html",
+      "task": "Jinja2 template for the main portfolio dashboard, displaying key metrics and the distribution chart."
+    },
+    {
+      "path": "frontend/templates/index.html",
+      "task": "Jinja2 template for the application's landing page."
+    },
+    {
+      "path": "frontend/templates/portfolio/add_asset.html",
+      "task": "Jinja2 template for the form to add a new asset to the portfolio."
+    },
+    {
+      "path": "frontend/templates/portfolio/edit_asset.html",
+      "task": "Jinja2 template for the form to edit an existing asset in the portfolio."
+    },
+    {
+      "path": "frontend/templates/portfolio/index.html",
+      "task": "Jinja2 template for displaying the user's detailed portfolio holdings."
+    },
+    {
+      "path": "frontend/templates/transactions/index.html",
+      "task": "Jinja2 template for displaying the comprehensive transaction history."
+    },
+    {
+      "path": "frontend/templates/user/profile.html",
+      "task": "Jinja2 template for the user's profile management page."
+    },
+    {
+      "path": "frontend/templates/user/settings.html",
+      "task": "Jinja2 template for application-specific user settings."
+    },
+    {
+      "path": "frontend/templates/watchlist/index.html",
+      "task": "Jinja2 template for displaying the user's personalized watchlist."
+    },
+    {
+      "path": "main.py",
+      "task": "The main entry point for the FastAPI application, initializing the app, routers, static files, templates, and background safety services."
+    },
+    {
+      "path": "requirements.txt",
+      "task": "Lists all Python dependencies with their exact versions for consistent environment setup."
+    }
+  ],
+  "dependencies": [
+    "fastapi==0.129.0",
+    "uvicorn[standard]",
+    "sqlalchemy==2.0.46",
+    "pydantic==2.12.5",
+    "pydantic-settings",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "alembic",
+    "jinja2",
+    "python-multipart",
+    "psutil"
+  ],
+  "run_command": "uvicorn main:app --host 0.0.0.0 --port 8000"
+}

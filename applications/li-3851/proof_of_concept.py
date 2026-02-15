@@ -1,48 +1,44 @@
 ```python
-# Import necessary libraries
+# This Python script is a basic Proof of Concept for an AI Engineer role
+# It utilizes a generative AI model from OpenAI's GPT-3 for text generation
+# The script demonstrates a simple text completion task
+# You'll need an OpenAI API key to run this script
+
 import openai
-import requests
-from bs4 import BeautifulSoup
 
-# Set up OpenAI API key
-openai.api_key = 'your-openai-api-key'
-
-# Function to scrape data from a webpage
-def scrape_webpage(url):
-    # Send an HTTP request to the provided URL
-    response = requests.get(url)
-    # Use BeautifulSoup to parse the HTML content
-    soup = BeautifulSoup(response.text, 'html.parser')
-    # Extract text content from the webpage
-    text_content = soup.get_text()
-    return text_content
-
-# Function to use the OpenAI model to generate content
-def generate_text(prompt):
-    # Generate a response from the prompt using OpenAI's GPT model
+def generate_text(prompt: str, api_key: str) -> str:
+    """
+    Generates text using OpenAI's GPT model.
+    
+    :param prompt: The initial text prompt to begin generation
+    :param api_key: The API key for authentication with OpenAI's API
+    :return: The generated text response
+    """
+    # Ensure that the OpenAI API key is set
+    openai.api_key = api_key
+    
+    # Use the OpenAI Completion endpoint to generate text based on the provided prompt
     response = openai.Completion.create(
-        engine="text-davinci-003",
+        engine="text-davinci-003", # Specify the model to use
         prompt=prompt,
-        max_tokens=150
+        max_tokens=100, # Limit the response length
+        temperature=0.7, # Control creativity or randomness in the output
+        n=1, # Number of generated responses to return
+        stop=["\n"] # Stop sequences for more controlled outputs
     )
-    # Extract the generated text from the response
+    
+    # Extract and return the generated text from the response
     return response.choices[0].text.strip()
 
-# Main execution
+# Sample usage
 if __name__ == "__main__":
-    # URL of the webpage to scrape
-    target_url = "https://example.com"
-
-    # Scrape the webpage for text content
-    page_text = scrape_webpage(target_url)
-    print("Scraped Text:", page_text)
-
-    # Define a Gen AI prompt based on scraped content
-    prompt = f"Generate an insightful summary of the following text: {page_text[:200]}"
-
-    # Generate new text using the Gen AI model
-    generated_text = generate_text(prompt)
-    print("Generated Text:", generated_text)
+    prompt_text = "Once upon a time"
+    openai_api_key = "your-openai-api-key" # Replace with your actual API Key
+    generated_output = generate_text(prompt_text, openai_api_key)
+    print(f"Generated text: {generated_output}")
 ```
 
-Comments explain each step of the Python script for a Proof of Concept in a Gen AI project, showcasing web scraping and AI text generation.
+Note:
+- Replace `"your-openai-api-key"` with a valid OpenAI API key.
+- This script assumes you have `openai` Python package installed. You can install it via `pip install openai`.
+- This is a basic generative script. For a full-fledged application, consider adding error handling, input validation, and more nuanced response management.

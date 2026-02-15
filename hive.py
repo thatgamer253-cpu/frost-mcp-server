@@ -81,7 +81,13 @@ class HiveOrchestrator:
                 "title": "Intra-Hive Economic Manager & Merchant",
                 "skills": ["Marketplace Management", "API Standardization", "Resource Allocation", "Internal Logistics"],
                 "keywords": ["internal shop", "sell to agents", "modular code", "proprietary module"],
-                "strategy": "Scout"
+                "strategy": "Merchant"
+            },
+            "hive_marketer": {
+                "title": "Creation Engine Evangelist & Marketer",
+                "skills": ["Viral Marketing", "Niche Targeting", "A2A Pitching", "Product Launch"],
+                "keywords": ["agent tool", "creation engine", "on-demand software", "automate agents"],
+                "strategy": "Merchant"
             }
         }
 

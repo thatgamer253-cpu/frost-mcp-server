@@ -1,0 +1,522 @@
+{
+  "project_name": "apex-portfolio-pro",
+  "project_type": "WEBSITE",
+  "mission_summary": "A robust web application for individual investors to manage, track, and analyze diverse investment portfolios with real-time insights and comprehensive reporting.",
+  "stack": {
+    "frontend": "TypeScript/Jinja2/Tailwind CSS/Alpine.js",
+    "backend": "FastAPI",
+    "database": "PostgreSQL"
+  },
+  "file_tree": [
+    "main.py",
+    "requirements.txt",
+    "Dockerfile",
+    "docker-compose.yml",
+    "README.md",
+    ".env.example",
+    "alembic.ini",
+    "package.json",
+    "tailwind.config.js",
+    "postcss.config.js",
+    "tsconfig.json",
+    "app/__init__.py",
+    "app/core/__init__.py",
+    "app/core/config.py",
+    "app/core/database.py",
+    "app/core/security.py",
+    "app/core/logging_config.py",
+    "app/core/exceptions.py",
+    "app/core/middleware.py",
+    "app/core/health.py",
+    "app/core/safety.py",
+    "app/schemas/__init__.py",
+    "app/schemas/auth.py",
+    "app/schemas/users.py",
+    "app/schemas/portfolios.py",
+    "app/schemas/assets.py",
+    "app/schemas/transactions.py",
+    "app/schemas/watchlist.py",
+    "app/schemas/market_data.py",
+    "app/schemas/reports.py",
+    "app/schemas/common.py",
+    "app/models/__init__.py",
+    "app/models/base.py",
+    "app/models/user.py",
+    "app/models/portfolio.py",
+    "app/models/asset.py",
+    "app/models/transaction.py",
+    "app/models/watchlist.py",
+    "app/services/__init__.py",
+    "app/services/auth_service.py",
+    "app/services/user_service.py",
+    "app/services/portfolio_service.py",
+    "app/services/asset_service.py",
+    "app/services/transaction_service.py",
+    "app/services/watchlist_service.py",
+    "app/services/market_data_service.py",
+    "app/services/report_service.py",
+    "app/api/__init__.py",
+    "app/api/v1/__init__.py",
+    "app/api/v1/auth.py",
+    "app/api/v1/users.py",
+    "app/api/v1/portfolios.py",
+    "app/api/v1/assets.py",
+    "app/api/v1/transactions.py",
+    "app/api/v1/watchlist.py",
+    "app/api/v1/market_data.py",
+    "app/api/v1/reports.py",
+    "app/web/__init__.py",
+    "app/web/dashboard.py",
+    "app/web/auth.py",
+    "app/web/portfolios.py",
+    "app/web/assets.py",
+    "app/web/transactions.py",
+    "app/web/watchlist.py",
+    "app/web/reports.py",
+    "app/web/settings.py",
+    "app/templates/base.html",
+    "app/templates/index.html",
+    "app/templates/auth/login.html",
+    "app/templates/auth/register.html",
+    "app/templates/auth/verify_email.html",
+    "app/templates/portfolios/list.html",
+    "app/templates/portfolios/detail.html",
+    "app/templates/portfolios/create_edit.html",
+    "app/templates/assets/list.html",
+    "app/templates/assets/create_edit.html",
+    "app/templates/transactions/list.html",
+    "app/templates/transactions/create_edit.html",
+    "app/templates/watchlist/list.html",
+    "app/templates/reports/overview.html",
+    "app/templates/settings/profile.html",
+    "app/templates/settings/preferences.html",
+    "app/templates/components/header.html",
+    "app/templates/components/sidebar.html",
+    "app/templates/components/footer.html",
+    "app/templates/components/chart.html",
+    "app/templates/components/notifications.html",
+    "app/static/css/style.css",
+    "app/static/js/alpine.min.js",
+    "app/static/js/chart.min.js",
+    "app/static/js/main.js",
+    "app/static/img/logo.svg",
+    "app/src/frontend/ts/main.ts",
+    "app/src/frontend/ts/utils/notifications.ts",
+    "app/src/frontend/ts/utils/chart_helpers.ts",
+    "migrations/env.py",
+    "migrations/script.py.mako",
+    "migrations/versions/.gitkeep"
+  ],
+  "files": [
+    {
+      "path": "main.py",
+      "task": "FastAPI application entry point. Initializes app, registers routers (API and web), configures templates, static files, logging, and includes global exception handlers and health endpoint. Starts background safety monitors."
+    },
+    {
+      "path": "requirements.txt",
+      "task": "Lists all Python dependencies with exact versions for reproducibility. Includes fastapi==0.129.0, sqlalchemy==2.0.46, pydantic==2.12.5, pydantic-settings, uvicorn[standard], alembic, psycopg2-binary, jinja2, python-jose[cryptography], passlib[bcrypt], python-multipart, loguru, httpx, tenacity, psutil."
+    },
+    {
+      "path": "Dockerfile",
+      "task": "Defines the Docker image for the FastAPI application. Uses python:3.12-slim as base, installs dependencies, copies application code, sets environment variables, and defines the startup command."
+    },
+    {
+      "path": "docker-compose.yml",
+      "task": "Orchestrates the application and PostgreSQL database for local development. Defines services, networks, and volumes for easy setup."
+    },
+    {
+      "path": "README.md",
+      "task": "Provides a comprehensive overview of Apex Portfolio Pro, including project description, features, technical architecture, setup instructions (local and Docker), API documentation, and usage guidelines."
+    },
+    {
+      "path": ".env.example",
+      "task": "Example environment variables required for the application, such as DATABASE_URL, SECRET_KEY, JWT_SECRET_KEY, MOCK_MARKET_DATA_API_KEY, etc."
+    },
+    {
+      "path": "alembic.ini",
+      "task": "Configuration file for Alembic, the database migration tool. Specifies database URL, script directory, and other settings."
+    },
+    {
+      "path": "package.json",
+      "task": "Node.js package manager configuration. Lists development dependencies for frontend tooling like tailwindcss@4.1.18, postcss, autoprefixer, typescript, and scripts for building CSS and compiling TypeScript."
+    },
+    {
+      "path": "tailwind.config.js",
+      "task": "Tailwind CSS configuration file. Defines theme, plugins, and content paths for JIT compilation, including light/dark mode setup."
+    },
+    {
+      "path": "postcss.config.js",
+      "task": "PostCSS configuration file. Integrates Tailwind CSS and Autoprefixer for processing CSS."
+    },
+    {
+      "path": "tsconfig.json",
+      "task": "TypeScript configuration file. Specifies compiler options, target, module resolution, and files to include for compilation of client-side scripts."
+    },
+    {
+      "path": "app/__init__.py",
+      "task": "Initializes the 'app' Python package."
+    },
+    {
+      "path": "app/core/__init__.py",
+      "task": "Initializes the 'core' Python package."
+    },
+    {
+      "path": "app/core/config.py",
+      "task": "Defines application settings using Pydantic-settings (BaseSettings). Manages environment variables, database URL, JWT secrets, and other configurable parameters. Provides sensible defaults."
+    },
+    {
+      "path": "app/core/database.py",
+      "task": "Configures SQLAlchemy engine, session factory, and declarative base for asynchronous database operations with PostgreSQL. Includes connection pooling and auto-reconnect logic."
+    },
+    {
+      "path": "app/core/security.py",
+      "task": "Handles security-related functionalities: password hashing (bcrypt), JWT token creation, encoding, decoding, and validation for user authentication and authorization."
+    },
+    {
+      "path": "app/core/logging_config.py",
+      "task": "Sets up structured logging for the application using `loguru`. Configures log format, levels, and sinks (console, file). Ensures consistent logging across the application."
+    },
+    {
+      "path": "app/core/exceptions.py",
+      "task": "Defines custom HTTP exceptions for common API error scenarios (e.g., NotFound, Unauthorized, Forbidden, BadRequest) to provide consistent error responses."
+    },
+    {
+      "path": "app/core/middleware.py",
+      "task": "Implements FastAPI middleware for global error handling, request ID injection, and response time tracking. Catches unhandled exceptions and returns structured JSON error responses."
+    },
+    {
+      "path": "app/core/health.py",
+      "task": "Contains the logic for the `/health` endpoint. Gathers application status, uptime, version, and performs checks for database connectivity, disk space, and other critical services."
+    },
+    {
+      "path": "app/core/safety.py",
+      "task": "Implements production safety infrastructure: retry logic with exponential backoff for external calls (using `tenacity`), a background watchdog/sentinel thread for monitoring system resources (disk, memory, process health using `psutil`), and atomic write utilities for critical files."
+    },
+    {
+      "path": "app/schemas/__init__.py",
+      "task": "Initializes the 'schemas' Python package."
+    },
+    {
+      "path": "app/schemas/auth.py",
+      "task": "Pydantic models for user authentication (e.g., UserRegister, UserLogin, Token)."
+    },
+    {
+      "path": "app/schemas/users.py",
+      "task": "Pydantic models for user profile management (e.g., UserCreate, UserUpdate, UserResponse)."
+    },
+    {
+      "path": "app/schemas/portfolios.py",
+      "task": "Pydantic models for portfolio management (e.g., PortfolioCreate, PortfolioUpdate, PortfolioResponse)."
+    },
+    {
+      "path": "app/schemas/assets.py",
+      "task": "Pydantic models for diverse asset types (e.g., StockCreate, CryptoCreate, BondCreate, CustomAssetCreate, AssetResponse)."
+    },
+    {
+      "path": "app/schemas/transactions.py",
+      "task": "Pydantic models for transaction management (e.g., TransactionCreate, TransactionResponse)."
+    },
+    {
+      "path": "app/schemas/watchlist.py",
+      "task": "Pydantic models for watchlist functionality (e.g., WatchlistCreate, WatchlistResponse)."
+    },
+    {
+      "path": "app/schemas/market_data.py",
+      "task": "Pydantic models for mocked market data (e.g., MarketDataResponse)."
+    },
+    {
+      "path": "app/schemas/reports.py",
+      "task": "Pydantic models for performance analytics and reporting (e.g., PortfolioPerformance, AssetAllocation)."
+    },
+    {
+      "path": "app/schemas/common.py",
+      "task": "Common Pydantic models like pagination parameters, generic success/error responses."
+    },
+    {
+      "path": "app/models/__init__.py",
+      "task": "Initializes the 'models' Python package."
+    },
+    {
+      "path": "app/models/base.py",
+      "task": "Defines the SQLAlchemy declarative base and common columns/mixins for ORM models."
+    },
+    {
+      "path": "app/models/user.py",
+      "task": "SQLAlchemy ORM model for User, including fields for authentication, roles, and relationships."
+    },
+    {
+      "path": "app/models/portfolio.py",
+      "task": "SQLAlchemy ORM model for Portfolio, defining relationships with users and assets."
+    },
+    {
+      "path": "app/models/asset.py",
+      "task": "SQLAlchemy ORM model for Asset, supporting different types (stock, crypto, bond, custom) and linking to portfolios."
+    },
+    {
+      "path": "app/models/transaction.py",
+      "task": "SQLAlchemy ORM model for Transaction, recording buy/sell/dividend/deposit/withdrawal events for assets."
+    },
+    {
+      "path": "app/models/watchlist.py",
+      "task": "SQLAlchemy ORM model for Watchlist, allowing users to track assets of interest."
+    },
+    {
+      "path": "app/services/__init__.py",
+      "task": "Initializes the 'services' Python package."
+    },
+    {
+      "path": "app/services/auth_service.py",
+      "task": "Business logic for user registration, login, password management, and JWT token handling. Includes email verification (mocked)."
+    },
+    {
+      "path": "app/services/user_service.py",
+      "task": "Business logic for user profile management, including CRUD operations for user data."
+    },
+    {
+      "path": "app/services/portfolio_service.py",
+      "task": "Business logic for creating, retrieving, updating, and deleting user portfolios. Ensures data integrity with transactions."
+    },
+    {
+      "path": "app/services/asset_service.py",
+      "task": "Business logic for managing diverse asset types within portfolios, including CRUD operations and validation."
+    },
+    {
+      "path": "app/services/transaction_service.py",
+      "task": "Business logic for recording and retrieving asset transactions, ensuring accurate portfolio value calculations."
+    },
+    {
+      "path": "app/services/watchlist_service.py",
+      "task": "Business logic for managing user watchlists, including adding and removing assets."
+    },
+    {
+      "path": "app/services/market_data_service.py",
+      "task": "Service layer for fetching (mocked) real-time market data for stocks and cryptocurrencies. Implements retry logic for external calls."
+    },
+    {
+      "path": "app/services/report_service.py",
+      "task": "Business logic for generating performance analytics and reports, calculating KPIs, and preparing data for visualizations."
+    },
+    {
+      "path": "app/api/__init__.py",
+      "task": "Initializes the 'api' Python package."
+    },
+    {
+      "path": "app/api/v1/__init__.py",
+      "task": "Initializes the 'v1' API version package and aggregates all v1 API routers."
+    },
+    {
+      "path": "app/api/v1/auth.py",
+      "task": "FastAPI router for user authentication API endpoints (register, login, logout, verify email)."
+    },
+    {
+      "path": "app/api/v1/users.py",
+      "task": "FastAPI router for user profile API endpoints (get, update, change password)."
+    },
+    {
+      "path": "app/api/v1/portfolios.py",
+      "task": "FastAPI router for portfolio management API endpoints (CRUD portfolios)."
+    },
+    {
+      "path": "app/api/v1/assets.py",
+      "task": "FastAPI router for asset management API endpoints (CRUD assets within portfolios)."
+    },
+    {
+      "path": "app/api/v1/transactions.py",
+      "task": "FastAPI router for transaction management API endpoints (CRUD transactions)."
+    },
+    {
+      "path": "app/api/v1/watchlist.py",
+      "task": "FastAPI router for watchlist API endpoints (CRUD watchlists)."
+    },
+    {
+      "path": "app/api/v1/market_data.py",
+      "task": "FastAPI router for mocked market data API endpoints."
+    },
+    {
+      "path": "app/api/v1/reports.py",
+      "task": "FastAPI router for performance analytics and reporting API endpoints."
+    },
+    {
+      "path": "app/web/__init__.py",
+      "task": "Initializes the 'web' Python package and aggregates all web (Jinja2) routers."
+    },
+    {
+      "path": "app/web/dashboard.py",
+      "task": "FastAPI router for the main dashboard web page, rendering an overview of portfolios and performance."
+    },
+    {
+      "path": "app/web/auth.py",
+      "task": "FastAPI router for web authentication pages (login, register, email verification forms)."
+    },
+    {
+      "path": "app/web/portfolios.py",
+      "task": "FastAPI router for web pages related to portfolio management (list, detail, create/edit forms)."
+    },
+    {
+      "path": "app/web/assets.py",
+      "task": "FastAPI router for web pages related to asset management (list, create/edit forms)."
+    },
+    {
+      "path": "app/web/transactions.py",
+      "task": "FastAPI router for web pages related to transaction management (list, create/edit forms)."
+    },
+    {
+      "path": "app/web/watchlist.py",
+      "task": "FastAPI router for web pages related to watchlist management."
+    },
+    {
+      "path": "app/web/reports.py",
+      "task": "FastAPI router for web pages displaying performance reports and charts."
+    },
+    {
+      "path": "app/web/settings.py",
+      "task": "FastAPI router for user profile and application settings web pages."
+    },
+    {
+      "path": "app/templates/base.html",
+      "task": "Base Jinja2 template defining the overall HTML structure, including head, body, Tailwind CSS, Alpine.js, and common components like header and sidebar. Implements light/dark mode toggle."
+    },
+    {
+      "path": "app/templates/index.html",
+      "task": "Jinja2 template for the main dashboard page, extending `base.html` and displaying portfolio summaries, charts, and quick links."
+    },
+    {
+      "path": "app/templates/auth/login.html",
+      "task": "Jinja2 template for the user login form."
+    },
+    {
+      "path": "app/templates/auth/register.html",
+      "task": "Jinja2 template for the user registration form."
+    },
+    {
+      "path": "app/templates/auth/verify_email.html",
+      "task": "Jinja2 template for the email verification page."
+    },
+    {
+      "path": "app/templates/portfolios/list.html",
+      "task": "Jinja2 template to display a list of user portfolios with summary information."
+    },
+    {
+      "path": "app/templates/portfolios/detail.html",
+      "task": "Jinja2 template to display detailed information for a single portfolio, including assets, transactions, and performance."
+    },
+    {
+      "path": "app/templates/portfolios/create_edit.html",
+      "task": "Jinja2 template for creating or editing a portfolio."
+    },
+    {
+      "path": "app/templates/assets/list.html",
+      "task": "Jinja2 template to display a list of assets within a specific portfolio."
+    },
+    {
+      "path": "app/templates/assets/create_edit.html",
+      "task": "Jinja2 template for creating or editing an asset."
+    },
+    {
+      "path": "app/templates/transactions/list.html",
+      "task": "Jinja2 template to display a detailed transaction history for a portfolio or asset."
+    },
+    {
+      "path": "app/templates/transactions/create_edit.html",
+      "task": "Jinja2 template for recording new transactions (buy, sell, dividend, etc.)."
+    },
+    {
+      "path": "app/templates/watchlist/list.html",
+      "task": "Jinja2 template to display the user's watchlist of assets."
+    },
+    {
+      "path": "app/templates/reports/overview.html",
+      "task": "Jinja2 template for displaying various performance reports and interactive charts."
+    },
+    {
+      "path": "app/templates/settings/profile.html",
+      "task": "Jinja2 template for the user profile settings page."
+    },
+    {
+      "path": "app/templates/settings/preferences.html",
+      "task": "Jinja2 template for application preferences like currency display and notifications."
+    },
+    {
+      "path": "app/templates/components/header.html",
+      "task": "Reusable Jinja2 component for the application's header, including branding, user menu, and global actions."
+    },
+    {
+      "path": "app/templates/components/sidebar.html",
+      "task": "Reusable Jinja2 component for the main navigation sidebar."
+    },
+    {
+      "path": "app/templates/components/footer.html",
+      "task": "Reusable Jinja2 component for the application's footer."
+    },
+    {
+      "path": "app/templates/components/chart.html",
+      "task": "Reusable Jinja2 component for rendering Chart.js graphs with dynamic data."
+    },
+    {
+      "path": "app/templates/components/notifications.html",
+      "task": "Reusable Jinja2 component for displaying toast notifications (success, warning, error) using Alpine.js."
+    },
+    {
+      "path": "app/static/css/style.css",
+      "task": "Compiled Tailwind CSS output file, generated from `tailwind.config.js` and `postcss.config.js`."
+    },
+    {
+      "path": "app/static/js/alpine.min.js",
+      "task": "Minified Alpine.js library for client-side interactivity."
+    },
+    {
+      "path": "app/static/js/chart.min.js",
+      "task": "Minified Chart.js library for rendering interactive data visualizations."
+    },
+    {
+      "path": "app/static/js/main.js",
+      "task": "Compiled JavaScript from `app/src/frontend/ts/main.ts`, containing custom client-side logic, Alpine.js initialization, and event handlers."
+    },
+    {
+      "path": "app/static/img/logo.svg",
+      "task": "Placeholder for the application's logo or branding image."
+    },
+    {
+      "path": "app/src/frontend/ts/main.ts",
+      "task": "TypeScript entry point for client-side logic. Initializes Alpine.js, sets up event listeners, and orchestrates other TypeScript modules. Compiles to `app/static/js/main.js`."
+    },
+    {
+      "path": "app/src/frontend/ts/utils/notifications.ts",
+      "task": "TypeScript utility for managing and displaying toast notifications."
+    },
+    {
+      "path": "app/src/frontend/ts/utils/chart_helpers.ts",
+      "task": "TypeScript utility for creating and updating Chart.js instances with dynamic data."
+    },
+    {
+      "path": "migrations/env.py",
+      "task": "Alembic environment script. Configures how Alembic interacts with the SQLAlchemy engine and models for migrations."
+    },
+    {
+      "path": "migrations/script.py.mako",
+      "task": "Alembic template for new migration scripts."
+    },
+    {
+      "path": "migrations/versions/.gitkeep",
+      "task": "Placeholder file to ensure the 'versions' directory is tracked by Git, where Alembic migration scripts will be stored."
+    }
+  ],
+  "dependencies": [
+    "fastapi==0.129.0",
+    "uvicorn[standard]",
+    "sqlalchemy==2.0.46",
+    "alembic",
+    "psycopg2-binary",
+    "pydantic==2.12.5",
+    "pydantic-settings",
+    "jinja2",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    "python-multipart",
+    "loguru",
+    "httpx",
+    "tenacity",
+    "psutil"
+  ],
+  "run_command": "uvicorn main:app --host 0.0.0.0 --port 8000"
+}

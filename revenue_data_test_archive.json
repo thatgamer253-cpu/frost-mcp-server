@@ -1,25 +1,6 @@
 {
   "pending_income": 0.0,
-  "available_payout": 498.0,
-  "total_earned": 498.0,
-  "transactions": [
-    {
-      "id": "TXN-revenue_test_999",
-      "type": "Income (Pending)",
-      "platform": "Marketplace",
-      "amount": 199.0,
-      "date": "2026-02-15 08:30:40",
-      "status": "Available",
-      "date_finalized": "2026-02-15 08:48:18"
-    },
-    {
-      "id": "TXN-test_sale_123",
-      "type": "Income (Pending)",
-      "platform": "Marketplace",
-      "amount": 299.0,
-      "date": "2026-02-15 08:37:19",
-      "status": "Available",
-      "date_finalized": "2026-02-15 08:37:19"
-    }
-  ]
+  "available_payout": 0.0,
+  "total_earned": 0.0,
+  "transactions": []
 }

@@ -1,0 +1,4 @@
+notify2
+matplotlib
+PyQt6
+requests

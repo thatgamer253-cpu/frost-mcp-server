@@ -1,0 +1,42 @@
+/* ── Restored Overlord V1 Aesthetics ──────────────────── */
+:root {
+  --bg-base: #050508;
+  --bg-surface: rgba(18, 18, 28, 0.6);
+  --bg-card: rgba(30, 30, 45, 0.4);
+  --bg-input: rgba(0, 0, 0, 0.3);
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --accent-hover: #7c3aed;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* Build HUD Cards */
+.hud-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.hud-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 3px; height: 100%;
+}
+.hud-card.cost::before { background: var(--green); box-shadow: 0 0 10px var(--green); }
+.hud-card.time::before { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }

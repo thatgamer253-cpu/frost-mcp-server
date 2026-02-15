@@ -1,0 +1,11 @@
+log
+PyQt6
+agent
+setuptools
+parameters
+PyQt5
+graphics
+widgets
+collision
+physics
+ui

@@ -67,6 +67,88 @@
         "Platform-specific tuning",
         "Detailed recommendations"
       ]
+    },
+    {
+      "id": "creation-engine-tool",
+      "name": "Custom Tool Creation",
+      "description": "Universal on-demand media and tool generation. Capable of creating custom videos, PDFs, images, games, and reverse-engineering complex systems for any agent requirement.",
+      "price": 10.00,
+      "currency": "usd",
+      "billing": "per_use",
+      "stripe_price_id": "price_creation_tool",
+      "endpoints": ["/tools/create_tool"],
+      "features": [
+        "Video & Image Generation",
+        "PDF & Document Automation",
+        "Universal Reverse Engineering",
+        "Multi-language support",
+        "Agent-optimized docs"
+      ]
+    },
+    {
+      "id": "creation-engine-app",
+      "name": "Full Application Build",
+      "description": "Complete application generation (UI, Backend, Games, Mobile). Capable of reverse-engineering any platform and building native packages for Windows, Linux, and Android.",
+      "price": 50.00,
+      "currency": "usd",
+      "billing": "per_use",
+      "stripe_price_id": "price_creation_app",
+      "endpoints": ["/tools/create_application"],
+      "features": [
+        "Windows/Linux/Android Native Builds",
+        "Game Development (2D/3D)",
+        "Platform Reverse Engineering",
+        "Full-stack Architecture",
+        "UI/UX Design"
+      ]
+    },
+    {
+      "id": "creation-engine-media",
+      "name": "Cinematic Video Synthesis",
+      "description": "Text-to-Cinematic MP4. Uses the Gemini Media Pipe for scene orchestration, DALL-E 3 asset forging, and dynamic motion assembly.",
+      "price": 25.00,
+      "currency": "usd",
+      "billing": "per_use",
+      "stripe_price_id": "price_creation_media",
+      "endpoints": ["/tools/create_video"],
+      "features": [
+        "Gemini-style scene scripting",
+        "DALL-E 3 HD Asset Forging",
+        "Cinematic Motion (Ken Burns)",
+        "24 FPS High-Quality Render"
+      ]
+    },
+    {
+      "id": "creation-engine-reverse",
+      "name": "Reverse Engineering Audit",
+      "description": "Deep deconstruction of legacy codebases or binaries. Generates architectural blueprints, technical documentation, and refactor plans.",
+      "price": 40.00,
+      "currency": "usd",
+      "billing": "per_use",
+      "stripe_price_id": "price_creation_reverse",
+      "endpoints": ["/tools/reverse_engineer"],
+      "features": [
+        "Automated Decompilation",
+        "Architectural Blueprinting",
+        "Logic Recovery & Documentation",
+        "Legacy to Modern Refactor Plan"
+      ]
+    },
+    {
+      "id": "creation-engine-bundle",
+      "name": "Native Platform Bundling",
+      "description": "Package any tool or app for native deployment on Windows (EXE), Linux, or Android (APK). Includes session persistence and icon conversion.",
+      "price": 30.00,
+      "currency": "usd",
+      "billing": "per_use",
+      "stripe_price_id": "price_creation_bundle",
+      "endpoints": ["/tools/bundle_deploy"],
+      "features": [
+        "Windows .EXE (PyInstaller/Bundler)",
+        "Android Native APK Packaging",
+        "Linux GTK/Debian Distribution",
+        "Custom Icon & Branding Injector"
+      ]
     }
   ]
 }
