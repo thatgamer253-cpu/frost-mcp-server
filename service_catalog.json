@@ -1,0 +1,72 @@
+{
+  "services": [
+    {
+      "id": "job-scanner-api",
+      "name": "Job Scanner API",
+      "description": "Automated job scanning across Upwork and LinkedIn with AI-powered scoring and filtering",
+      "price": 5.00,
+      "currency": "usd",
+      "billing": "monthly",
+      "stripe_price_id": "price_job_scanner_monthly",
+      "endpoints": ["/api/scan"],
+      "features": [
+        "Multi-platform scanning (Upwork, LinkedIn)",
+        "AI-powered job scoring",
+        "Custom keyword filtering",
+        "Remote job focus",
+        "JSON response format"
+      ]
+    },
+    {
+      "id": "cover-letter-generator",
+      "name": "Cover Letter Generator",
+      "description": "GPT-4 powered cover letter generation customized to job descriptions",
+      "price": 0.50,
+      "currency": "usd",
+      "billing": "per_use",
+      "stripe_price_id": "price_cover_letter_per_use",
+      "endpoints": ["/api/generate-letter"],
+      "features": [
+        "GPT-4 powered generation",
+        "Customized to job description",
+        "Professional formatting",
+        "Multiple tone options",
+        "Instant delivery"
+      ]
+    },
+    {
+      "id": "automation-toolkit",
+      "name": "Browser Automation Toolkit",
+      "description": "Complete Playwright-based browser automation scripts with session management",
+      "price": 20.00,
+      "currency": "usd",
+      "billing": "one_time",
+      "stripe_price_id": "price_automation_toolkit",
+      "endpoints": ["/api/download/automation-toolkit"],
+      "features": [
+        "Playwright scripts",
+        "Session management",
+        "Anti-detection techniques",
+        "Multi-platform support",
+        "Full source code"
+      ]
+    },
+    {
+      "id": "profile-optimizer",
+      "name": "Profile Optimizer",
+      "description": "AI-powered profile enhancement for job platforms",
+      "price": 10.00,
+      "currency": "usd",
+      "billing": "one_time",
+      "stripe_price_id": "price_profile_optimizer",
+      "endpoints": ["/api/optimize-profile"],
+      "features": [
+        "AI-powered analysis",
+        "Keyword optimization",
+        "Skills enhancement",
+        "Platform-specific tuning",
+        "Detailed recommendations"
+      ]
+    }
+  ]
+}
