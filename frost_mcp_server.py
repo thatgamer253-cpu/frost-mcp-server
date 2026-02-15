@@ -319,26 +319,25 @@ async def list_tools():
                 "description": "Generate professional cover letters",
                 "endpoint": "/tools/generate_cover_letter",
                 "cost": "$0.50 per letter"
+            },
+            {
+                "name": "create_tool",
+                "description": "Generate custom tools and scripts",
+                "endpoint": "/tools/create_tool",
+                "cost": "$10.00 per tool"
+            },
+            {
+                "name": "create_application",
+                "description": "Build complete applications with UI",
+                "endpoint": "/tools/create_application",
+                "cost": "$50.00 per application"
+            },
+            {
+                "name": "create_automation",
+                "description": "Create automation workflows",
+                "endpoint": "/tools/create_automation",
+                "cost": "$20.00 per automation"
             }
-        ],
-        {
-            "name": "create_tool",
-            "description": "Generate custom tools and scripts",
-            "endpoint": "/tools/create_tool",
-            "cost": "$10.00 per tool"
-        },
-        {
-            "name": "create_application",
-            "description": "Build complete applications with UI",
-            "endpoint": "/tools/create_application",
-            "cost": "$50.00 per application"
-        },
-        {
-            "name": "create_automation",
-            "description": "Create automation workflows",
-            "endpoint": "/tools/create_automation",
-            "cost": "$20.00 per automation"
-        }
         ]
     }
 
