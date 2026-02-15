@@ -1,12 +1,25 @@
-# Frost Job Tools
+# Frost AI Development Platform
 
-AI-powered job scanning and cover letter generation for job seekers.
+AI-powered job search automation and on-demand tool/app generation platform.
 
 ## Features
 
+### Job Search Tools
+
 - **Job Scanning**: Scan Upwork and LinkedIn for opportunities matching your keywords
 - **Cover Letter Generation**: Generate professional, AI-powered cover letters customized to specific jobs
+
+### Creation Engine Tools
+
+- **Tool Creation**: Generate custom scripts and tools on-demand
+- **Application Building**: Build complete applications with UI and backend
+- **Automation Workflows**: Create automation scripts for various platforms
+
+### Platform Features
+
 - **API Access**: Simple REST API for easy integration
+- **Usage-Based Pricing**: Pay only for what you use
+- **Revenue Tracking**: Automatic transaction tracking
 
 ## Tools
 
