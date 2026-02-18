@@ -7,10 +7,10 @@ services:
     env: python
     region: oregon
     plan: free
-    # Use the custom build script
-    buildCommand: "./render_build.sh"
-    # Ensure startup uses the venv we just created!
-    startCommand: "./venv/bin/python3 frost_mcp_server.py"
+    # "Power Move" - Install directly to the runtime environment using python3 -m pip
+    buildCommand: "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt"
+    # Run directly with system python3
+    startCommand: "python3 frost_mcp_server.py"
     envVars:
       - key: PYTHON_VERSION
         value: "3.12"
