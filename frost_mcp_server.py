@@ -1,11 +1,28 @@
 
 import os
-from mcp.server import Server
+import sys
+import subprocess
+
+# --- SELF-HEALING IMPORT LOGIC ---
+try:
+    from mcp.server import Server
+except ImportError:
+    print("⚠️  MCP module not found. Attempting emergency runtime installation...")
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "mcp"])
+        from mcp.server import Server
+        print("✅  Emergency install successful. Resuming startup.")
+    except Exception as e:
+        print(f"❌  Critical Error: Failed to install mcp. {e}")
+        # Re-raise to crash properly if we can't fix it
+        raise
+
+# Import the rest after ensuring mcp exists
 from mcp.server.sse import SseServerTransport
-from starlette.applications import Starlette
-from starlette.routing import Route, Mount
-import uvicorn
 from mcp.types import Tool, TextContent
+from starlette.applications import Starlette
+from starlette.routing import Route
+import uvicorn
 
 # 1. Initialize the MCP Server
 app = Server("frost-mcp-server")
@@ -36,31 +53,6 @@ async def handle_messages(request):
     await sse.handle_post_message(request.scope, request.receive, request._send)
 
 # 4. Create the Starlette App (The "Callable" Render wants)
-starlette_app = Starlette(
-    routes=[
-        Route("/sse", endpoint=handle_sse),
-        Mount("/messages", app=handle_messages), # Corrected Mount usage for Starlette
-    ]
-)
-
-# Correction for handle_messages - Starlette Mount expects an ASGI app or a callable that behaves like one. 
-# But handle_messages is an async function taking request. 
-# Actually, sse.handle_post_message is designed for this. 
-# Let's double check standard Starlette usage. 
-# Route handles Http, Mount handles sub-apps. 
-# If handle_messages is an endpoint, Route is correct. 
-# The user's snippet used Mount("/messages", endpoint=handle_messages). 
-# But usually Mount is for sub-applications. 
-# Wait, the user's snippet had: Mount("/messages", endpoint=handle_messages).
-# Let's stick to the user's snippet as much as possible but fix the obvious "endpoint" arg in Mount if it's wrong.
-# In Starlette, Mount(path, app=...). 
-# The user provided `Mount("/messages", endpoint=handle_messages)`. 
-# This looks like mixing Route and Mount. 
-# If `handle_messages` handles the POST request, it should be a Route. 
-# I will use Route for /messages as well, as it is a single endpoint. 
-# Wait, sse.handle_post_message might need to handle sub-paths? No, usually just /messages.
-# I will stick to Route for both to be safe, as handle_messages is a function.
-
 starlette_app = Starlette(
     routes=[
         Route("/sse", endpoint=handle_sse),
