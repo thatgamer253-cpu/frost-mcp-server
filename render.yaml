@@ -1,0 +1,16 @@
+# Render Blueprint — frost-mcp-server
+# Auto-detected by Render when named render.yaml at repo root.
+
+services:
+  - type: web
+    name: frost-mcp-server
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt"
+    startCommand: "python3 frost_mcp_server.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: PORT
+        value: "10000"
