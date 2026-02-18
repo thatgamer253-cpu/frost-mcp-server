@@ -1,9 +1,0 @@
-aiohttp
-fastapi
-state_manager
-PyYAML
-pysqlite3
-task_manager
-asyncio
-error_handler
-plugin_loader

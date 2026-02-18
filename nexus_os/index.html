@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus OS — Creation Agent Workspace</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css"
+    />
+    <link rel="stylesheet" href="desktop.css" />
+  </head>
+  <body>
+    <div id="desktop">
+      <!-- Icons/Shortcuts will be injected here -->
+      <div class="desktop-icons" id="desktopIcons">
+        <div class="shortcut" data-app="overlord">
+          <div class="shortcut-icon">🚀</div>
+          <div class="shortcut-label">Overlord</div>
+        </div>
+        <div class="shortcut" data-app="terminal">
+          <div class="shortcut-icon">🖥️</div>
+          <div class="shortcut-label">Terminal</div>
+        </div>
+        <div class="shortcut" data-app="explorer">
+          <div class="shortcut-icon">📂</div>
+          <div class="shortcut-label">Explorer</div>
+        </div>
+        <div class="shortcut" data-app="creation_engine">
+          <div class="shortcut-icon">✨</div>
+          <div class="shortcut-label">Creator</div>
+        </div>
+        <div class="shortcut" data-app="pulse">
+          <div class="shortcut-icon">📶</div>
+          <div class="shortcut-label">Pulse</div>
+        </div>
+        <div class="shortcut" data-app="nexus_agent">
+          <div class="shortcut-icon">💎</div>
+          <div class="shortcut-label">Agent</div>
+        </div>
+      </div>
+
+      <!-- Start Menu -->
+      <div id="startMenu" class="glass-panel">
+        <div class="start-sidebar">
+          <div class="start-user">👤</div>
+          <div class="start-power">⏻</div>
+        </div>
+        <div class="start-list">
+          <div class="start-section-title">Productivity</div>
+          <div class="start-item" data-app="creation_engine">
+            <span>✨</span> Ag. Creator
+          </div>
+          <div class="start-item" data-app="overlord">
+            <span>🚀</span> Overlord Builder
+          </div>
+          <div class="start-item" data-app="explorer">
+            <span>📂</span> File Explorer
+          </div>
+          <div class="start-item" data-app="terminal">
+            <span>🖥️</span> Terminal
+          </div>
+          <div class="start-item" data-app="pulse">
+            <span>📶</span> Nexus Pulse (Agent Social)
+          </div>
+          <div class="start-item" data-app="sentinel">
+            <span>🛡️</span> Nexus Sentinel (Security)
+          </div>
+          <div class="start-item" data-app="nexus_agent">
+            <span>💎</span> Nexus Agent
+          </div>
+          <div class="start-item" data-app="settings">
+            <span>⚙️</span> Settings
+          </div>
+        </div>
+      </div>
+
+      <!-- Windows Container -->
+      <div id="windowsContainer"></div>
+
+      <!-- New: Command Palette -->
+      <div
+        id="command-palette"
+        style="
+          display: none;
+          position: fixed;
+          top: 15%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 500px;
+          background: rgba(20, 20, 30, 0.9);
+          backdrop-filter: blur(25px);
+          border: 1px solid var(--accent);
+          border-radius: 12px;
+          z-index: 100000;
+          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+          overflow: hidden;
+        "
+      >
+        <input
+          type="text"
+          id="cmd-input"
+          placeholder="Type a command or app name..."
+          style="
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 18px 24px;
+            color: white;
+            font-family: &quot;JetBrains Mono&quot;;
+            font-size: 16px;
+            outline: none;
+          "
+        />
+        <div
+          id="cmd-results"
+          style="
+            border-top: 1px solid var(--glass-border);
+            max-height: 300px;
+            overflow-y: auto;
+          "
+        ></div>
+      </div>
+
+      <!-- Taskbar -->
+      <div id="taskbar">
+        <div id="startMenuBtn">◈</div>
+        <div id="runningApps"></div>
+        <div id="systemTray">
+          <div id="clock">00:00:00</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="os_core.js"></script>
+  </body>
+</html>

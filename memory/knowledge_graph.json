@@ -1,0 +1,49 @@
+{
+  "nodes": [
+    {
+      "id": "mem_1771216901974",
+      "content": "User prefers Runway Gen-4 Turbo for image-to-video tasks.",
+      "timestamp": "2026-02-15T23:41:41.974217",
+      "user_id": "Donovan",
+      "metadata": {
+        "provider": "runway",
+        "model": "gen-4-turbo"
+      }
+    },
+    {
+      "id": "mem_1771216901974",
+      "content": "User prefers Luma Ray-2 for cinematic text-to-video with 16:9 aspect ratio.",
+      "timestamp": "2026-02-15T23:41:41.974591",
+      "user_id": "Donovan",
+      "metadata": {
+        "provider": "luma",
+        "model": "ray-2"
+      }
+    },
+    {
+      "id": "mem_1771216901974",
+      "content": "Video upscaling should use Runway Upscale v1 for 4K resolution.",
+      "timestamp": "2026-02-15T23:41:41.974915",
+      "user_id": "Donovan",
+      "metadata": {
+        "provider": "runway",
+        "model": "upscale-v1"
+      }
+    }
+  ],
+  "relationships": [],
+  "history": [
+    {
+      "text": "User prefers Runway Gen-4 Turbo for image-to-video tasks.",
+      "ts": 1771216901.9742396
+    },
+    {
+      "text": "User prefers Luma Ray-2 for cinematic text-to-video with 16:9 aspect ratio.",
+      "ts": 1771216901.9745946
+    },
+    {
+      "text": "Video upscaling should use Runway Upscale v1 for 4K resolution.",
+      "ts": 1771216901.9749186
+    }
+  ]
+}

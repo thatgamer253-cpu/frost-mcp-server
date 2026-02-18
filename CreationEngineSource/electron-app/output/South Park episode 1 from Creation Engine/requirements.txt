@@ -1,9 +1,0 @@
-openai==1.0.0
-manim==0.17.3
-gTTS==2.2.3
-Pillow==10.0.0
-moviepy>=2.0.0
-python-dotenv==1.0.0
-fastapi
-uvicorn
-numpy

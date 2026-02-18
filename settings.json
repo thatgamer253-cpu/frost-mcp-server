@@ -1,0 +1,13 @@
+{
+  "openaiKey": "your_openai_key_here",
+  "groqKey": "",
+  "geminiKey": "your_gemini_key_here",
+  "elevenKey": "",
+  "anthropicKey": "your_anthropic_key_here",
+  "outputDir": "",
+  "defaultModel": "gpt-4o",
+  "budget": 5,
+  "autoBundle": true,
+  "autoDocker": false,
+  "autoReadme": true
+}

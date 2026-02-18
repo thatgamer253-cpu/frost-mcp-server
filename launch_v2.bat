@@ -1,0 +1,6 @@
+@echo off
+echo Creating Shortcut...
+powershell -ExecutionPolicy Bypass -File "scripts\install_shortcut.ps1"
+echo Launching Overlord V2...
+python creator_v2.py
+pause

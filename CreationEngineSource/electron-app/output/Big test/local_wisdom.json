@@ -1,6 +1,0 @@
-{
-  "TypeError: StateManager.__init__() missing 2 required positional arguments: 'db_path' and 'logger'": "LLM repaired logic in app.py. Review the fix if error recurs.",
-  "SyntaxError: unmatched ')'": "Fix syntax: check for missing colons, brackets, or indentation.",
-  "SyntaxError: expected 'except' or 'finally' block": "Fix syntax: check for missing colons, brackets, or indentation.",
-  "IndentationError: unexpected indent": "LLM repaired logic in app.py. Review the fix if error recurs."
-}

@@ -1,4 +1,0 @@
-numpy
-fastapi
-textblob
-openai

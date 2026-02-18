@@ -1,97 +1,90 @@
 import os
-import json
-import time
-from work_engine import WorkEngine
-from auto_submitter import AutoSubmitter
-from guardian import guardian
-import marketing_engine
+import logging
+from typing import Optional, Dict, Any
+from fastapi import FastAPI, Header, HTTPException, Body
+from pydantic import BaseModel
+from core.media import MultimodalEngine
+from tool_generator import ToolGenerator
+from security_hardened_mcp import require_auth, sanitize_prompt, VALID_API_KEY
 
-def load_all_profiles():
-    profiles_dir = 'profiles'
-    if not os.path.exists(profiles_dir):
-        # Fallback to single profile if hive is not initialized
-        if os.path.exists('profile_config.json'):
-            with open('profile_config.json', 'r') as f:
-                return [json.load(f)]
-        return []
+# Configure Hardened Logging
+LOG_FILE = os.getenv("MCP_LOG_FILE", "/tmp/mcp-server.log")
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format='%(asctime)s - [%(levelname)s] - %(message)s'
+)
+logger = logging.getLogger("FrostMCP")
+
+app = FastAPI(title="Frost Hardened MCP Server", version="2026.0.1")
+
+# State Initialization
+media_engine = MultimodalEngine()
+tool_forge = ToolGenerator(os.path.join(os.getcwd(), "frost_tools"))
+
+class ImageRequest(BaseModel):
+    context: str
+    save_dir: str
+
+class VideoRequest(BaseModel):
+    image_path: str
+    save_dir: str
+
+class ToolRequest(BaseModel):
+    description: str
+    name: str
+
+@app.get("/")
+async def root():
+    return {"status": "Frost MCP Online", "security": "Zero-Trust Active"}
+
+@app.get("/.well-known/health")
+async def health():
+    return {"status": "healthy", "timestamp": "2026-02-15"}
+
+@app.post("/tools/generate_image")
+@require_auth
+async def generate_image(request: ImageRequest, auth_token: Optional[str] = Header(None)):
+    """Exposes MultimodalEngine.generate_visual_dna with sanitization and auth."""
+    logger.info(f"Image generation requested. Token hash: {hash(auth_token)}")
     
-    profiles = []
-    for filename in os.listdir(profiles_dir):
-        if filename.endswith('.json'):
-            with open(os.path.join(profiles_dir, filename), 'r') as f:
-                try: 
-                    p = json.load(f)
-                    p['_filename'] = filename # Internal tracking
-                    profiles.append(p)
-                except: pass
-    return profiles
-
-def run_agent_loop(profile, submitter):
-    guardian.log_activity(f"AGENT START: {profile.get('name')} [{profile.get('title')}]")
-    is_closer = any(kw in profile.get("title", "") for kw in ["Diplomac", "Social", "Diplomat", "Merchant"])
-
-    if is_closer:
-        guardian.log_activity(f"[{profile.get('name')}] DIPLOMAT MODE: Checking messages & marketplace...")
-        submitter.check_messages("LinkedIn")
-        submitter.check_messages("Upwork")
-        
-        if "Merchant" in profile.get("title", ""):
-            m_dir = 'marketplace'
-            if os.path.exists(m_dir):
-                items = os.listdir(m_dir)
-                guardian.log_activity(f"[{profile.get('name')}] MERCHANT: Auditing marketplace ({len(items)} products total).")
-                from revenue import RevenueManager
-                rev_manager = RevenueManager()
-                
-                for item in items:
-                    state_path = os.path.join(m_dir, item, 'state.json')
-                    if os.path.exists(state_path):
-                        try:
-                            with open(state_path, 'r') as f:
-                                st_data = json.load(f)
-                            if st_data.get('current_phase') == "COMPLETE":
-                                success, amount = rev_manager.process_marketplace_sale(item)
-                                if success:
-                                    guardian.log_activity(f"[{profile.get('name')}] MERCHANT: SALE CONFIRMED! Project {item} sold for ${amount:.2f}.")
-                                    guardian.send_social_message(profile.get("name"), f"💰 MARKETPLACE SALE! Just finalized ${amount:.2f} for project '{item}'. Funds moved to Stripe Balance.")
-                        except: pass
+    # Sanitization is handled within the engine, but we log here for visibility
+    result = media_engine.generate_visual_dna(request.context, request.save_dir)
     
-    # GLOBAL MARKETING: All agents promote marketplace services and the Creation Engine
-    from marketing_engine import MarketingEngine
-    marketer = MarketingEngine(profile)
+    if not result:
+        raise HTTPException(status_code=500, detail="Image generation failed.")
     
-    guardian.log_activity(f"[{profile.get('name')}] MARKETING: Generating outreach campaign...")
-    try:
-        campaign = marketer.generate_campaign()
-        if campaign:
-            marketer.execute_social_outreach(campaign)
-    except Exception as e:
-        guardian.log_activity(f"[{profile.get('name')}] MARKETING ERROR: {str(e)}")
+    return {"status": "success", "image_path": result}
 
-def main():
-    guardian.log_activity("--- Project Frost HIVE Mode Initialized [MARKETPLACE FOCUS] ---")
-    submitter = AutoSubmitter()
+@app.post("/tools/generate_video")
+@require_auth
+async def generate_video(request: VideoRequest, auth_token: Optional[str] = Header(None)):
+    """Exposes MultimodalEngine.generate_ux_motion with sanitization and auth."""
+    logger.info(f"Video motion requested. Image: {request.image_path}")
     
-    while True:
-        profiles = load_all_profiles()
-        if not profiles:
-            guardian.log_activity("No profiles found. Swarm idle...")
-            time.sleep(60)
-            continue
+    result = media_engine.generate_ux_motion(request.image_path, request.save_dir)
+    
+    if not result:
+        raise HTTPException(status_code=500, detail="Video generation failed.")
+    
+    return {"status": "success", "video_path": result}
 
-        guardian.log_activity(f"HIVE UPDATE: {len(profiles)} agents active in swarm.")
-        for profile in profiles:
-            try:
-                run_agent_loop(profile, submitter)
-            except Exception as e:
-                guardian.log_activity(f"HIVE CRITICAL: Agent {profile.get('name')} failed: {str(e)}", "CRITICAL")
-            
-            # Short breathe between agent cycles to avoid overloading system
-            time.sleep(5)
-
-        wait_time = 60 # FORCED LIVE VELOCITY
-        guardian.log_activity(f"HIVE SLEEP: Cycle complete. Next sync in {wait_time}s.")
-        time.sleep(wait_time)
+@app.post("/tools/forge_tool")
+@require_auth
+async def forge_tool(request: ToolRequest, auth_token: Optional[str] = Header(None)):
+    """Exposes ToolGenerator.generate_util with sanitization and auth."""
+    logger.info(f"Tool forge initiated: {request.name}")
+    
+    # Sanitization happens in tool_forge.generate_util
+    result = tool_forge.generate_util(request.description, request.name)
+    
+    if result["status"] == "error":
+        raise HTTPException(status_code=500, detail="Tool forgery failed.")
+    
+    return result
 
 if __name__ == "__main__":
-    main()
+    import uvicorn
+    # Standalone mode (mostly for local testing/dev)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

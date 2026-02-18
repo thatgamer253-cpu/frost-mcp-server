@@ -1,0 +1,319 @@
+[
+  {
+    "timestamp": "2026-02-16T01:28:23.382839",
+    "fleet_consensus_accuracy": 0.0,
+    "total_operations": 0,
+    "agents": {
+      "Agent": {
+        "role": "Architect",
+        "success_rate": 95.0,
+        "reputation": "\u26a1 Rapid",
+        "successes": 0,
+        "failures": 0,
+        "recent_action": "Awaiting first task"
+      },
+      "Agent 2": {
+        "role": "Fabricator",
+        "success_rate": 95.0,
+        "reputation": "\u26a1 Rapid",
+        "successes": 0,
+        "failures": 0,
+        "recent_action": "Awaiting first task"
+      },
+      "sell_agent": {
+        "role": "Merchant",
+        "success_rate": 95.0,
+        "reputation": "\u26a1 Rapid",
+        "successes": 0,
+        "failures": 0,
+        "recent_action": "Awaiting first task"
+      },
+      "Sentinel": {
+        "role": "Auditor",
+        "success_rate": 95.0,
+        "reputation": "\u26a1 Rapid",
+        "successes": 0,
+        "failures": 0,
+        "recent_action": "Awaiting first task"
+      },
+      "Alchemist": {
+        "role": "Optimizer",
+        "success_rate": 95.0,
+        "reputation": "\u26a1 Rapid",
+        "successes": 0,
+        "failures": 0,
+        "recent_action": "Awaiting first task"
+      }
+    },
+    "maintenance_log": [
+      "[SIEGE] Initiating weekly Red-Team Siege on Fabricator output...",
+      "[SIEGE] Complete: 0 file(s) audited, 0 vulnerability(ies) flagged",
+      "[CAP] Budget OK: $0.0000 / $5.00 ($5.0000 remaining)"
+    ]
+  },
+  {
+    "hive_id": "HIVE-10E817843FAF",
+    "verdict": "CONSENSUS_REACHED",
+    "files": [],
+    "cost_usd": 0.0001,
+    "zk_proof": "0cbb55635d0457ea5ce398eafb147f36",
+    "timestamp": "2026-02-16T01:45:30.993053"
+  },
+  {
+    "hive_id": "HIVE-149A8BB1D331",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "SecureCLIChat/src/encryption/encryption_service.py",
+      "SecureCLIChat/src/messaging/messaging_service.py",
+      "SecureCLIChat/src/utils/config_manager.py",
+      "SecureCLIChat/src/utils/logger.py",
+      "SecureCLIChat/src/health/health_monitor.py",
+      "SecureCLIChat/src/health/watchdog.py",
+      "SecureCLIChat/tests/encryption/test_encryption_service.py",
+      "SecureCLIChat/tests/messaging/test_messaging_service.py",
+      "SecureCLIChat/tests/utils/test_config_manager.py",
+      "SecureCLIChat/tests/utils/test_logger.py",
+      "SecureCLIChat/config/default_config.json",
+      "SecureCLIChat/.gitignore",
+      "SecureCLIChat/requirements.txt",
+      "SecureCLIChat/setup.py",
+      "SecureCLIChat/README.md"
+    ],
+    "cost_usd": 0.519,
+    "zk_proof": "4edbc33098ea32a676e93161cb743145",
+    "timestamp": "2026-02-16T01:48:36.113471"
+  },
+  {
+    "hive_id": "HIVE-A9A19BDDA2D5",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/.env",
+      "flask_todo_api/logging_config.py",
+      "flask_todo_api/tests/test_routes.py",
+      "flask_todo_api/tests/test_models.py"
+    ],
+    "cost_usd": 0.6754,
+    "zk_proof": "c08bb515b584d1f6bf81e41b8df07df7",
+    "timestamp": "2026-02-16T02:01:21.605520"
+  },
+  {
+    "hive_id": "HIVE-67AA7479F611",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "src/app.py",
+      "src/routes.py",
+      "src/models.py",
+      "src/utils.py",
+      "src/config.py",
+      "src/health.py",
+      "src/rate_limiter.py",
+      "src/__init__.py",
+      "tests/test_routes.py",
+      "tests/test_health.py",
+      "tests/test_rate_limiter.py",
+      "requirements.txt",
+      "Dockerfile",
+      "docker-compose.yml",
+      "README.md"
+    ],
+    "cost_usd": 1.0524,
+    "zk_proof": "448a6800844f4408cfde2636ce15a147",
+    "timestamp": "2026-02-16T02:12:06.040814"
+  },
+  {
+    "hive_id": "HIVE-2816C615BAE6",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "src/app.py",
+      "src/routes.py",
+      "src/models.py",
+      "src/utils.py",
+      "src/config.py",
+      "src/health.py",
+      "src/rate_limiter.py",
+      "src/templates/index.html",
+      "src/static/style.css",
+      "tests/test_routes.py",
+      "tests/test_health.py",
+      "requirements.txt",
+      "Dockerfile",
+      "docker-compose.yml",
+      ".env",
+      "README.md"
+    ],
+    "cost_usd": 0.9878,
+    "zk_proof": "2d4267e74baa279168d15171964dffd2",
+    "timestamp": "2026-02-16T02:25:04.930873"
+  },
+  {
+    "hive_id": "HIVE-D76C33E8A7A4",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "src/app.py",
+      "src/routes.py",
+      "src/models.py",
+      "src/utils.py",
+      "src/config.py",
+      "src/health.py",
+      "src/rate_limiter.py",
+      "tests/test_routes.py",
+      "tests/test_health.py",
+      "requirements.txt",
+      "Dockerfile",
+      "docker-compose.yml",
+      ".env",
+      "README.md"
+    ],
+    "cost_usd": 0.6651,
+    "zk_proof": "e8de04619c07faac8e15542fac02167f",
+    "timestamp": "2026-02-16T02:35:42.832152"
+  },
+  {
+    "hive_id": "HIVE-9B4FB45CA477",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/tests/test_routes.py",
+      "flask_todo_api/templates/index.html",
+      "flask_todo_api/static/style.css",
+      "flask_todo_api/logs/app.log"
+    ],
+    "cost_usd": 0.5848,
+    "zk_proof": "de693102c1a49b2470021a64126e6250",
+    "timestamp": "2026-02-16T02:45:11.388712"
+  },
+  {
+    "hive_id": "HIVE-687D260175A9",
+    "verdict": "CONSENSUS_PARTIAL",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/tests/test_routes.py"
+    ],
+    "cost_usd": 0.4829,
+    "zk_proof": "7f0f90cc141869db085e25328c9288a4",
+    "timestamp": "2026-02-16T02:47:37.562584"
+  },
+  {
+    "hive_id": "HIVE-855B7EFE1F64",
+    "verdict": "CONSENSUS_REACHED",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/tests/test_routes.py",
+      "flask_todo_api/logs/app.log",
+      "flask_todo_api/.env",
+      "flask_todo_api/Dockerfile",
+      "flask_todo_api/docker-compose.yml",
+      "flask_todo_api/README.md"
+    ],
+    "cost_usd": 0.2144,
+    "zk_proof": "98018a57f9bdbb49bf2346f4799dea70",
+    "timestamp": "2026-02-16T02:49:28.026101"
+  },
+  {
+    "hive_id": "HIVE-35CBFC40457D",
+    "verdict": "CONSENSUS_REACHED",
+    "files": [
+      "src/app.py",
+      "src/routes.py",
+      "src/models.py",
+      "src/utils.py",
+      "src/config.py",
+      "src/health.py",
+      "src/rate_limiter.py",
+      "tests/test_routes.py",
+      "tests/test_health.py",
+      "requirements.txt",
+      "Dockerfile",
+      "docker-compose.yml",
+      ".env",
+      "README.md"
+    ],
+    "cost_usd": 0.2442,
+    "zk_proof": "f10b74259448fb5c0fb69bd1eff54c80",
+    "timestamp": "2026-02-16T02:54:18.852661"
+  },
+  {
+    "hive_id": "HIVE-E6B4987ACC8D",
+    "verdict": "CONSENSUS_REACHED",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/health.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/logging_config.py",
+      "flask_todo_api/tests/test_routes.py",
+      "flask_todo_api/tests/test_health.py",
+      "flask_todo_api/.env",
+      "flask_todo_api/.gitignore"
+    ],
+    "cost_usd": 0.1464,
+    "zk_proof": "15ff4c97f421594abe578ef8632b61e5",
+    "timestamp": "2026-02-16T03:04:46.100471"
+  },
+  {
+    "hive_id": "HIVE-42AB5A64B5D8",
+    "verdict": "CONSENSUS_REACHED",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/tests/test_routes.py",
+      "flask_todo_api/logs/app.log",
+      "flask_todo_api/.env",
+      "flask_todo_api/Dockerfile",
+      "flask_todo_api/docker-compose.yml",
+      "flask_todo_api/README.md"
+    ],
+    "cost_usd": 0.1996,
+    "zk_proof": "d9412d91737dd26474f7a40af0a7849d",
+    "timestamp": "2026-02-16T03:24:33.307797"
+  },
+  {
+    "hive_id": "HIVE-D1A50DAE338B",
+    "verdict": "CONSENSUS_REACHED",
+    "files": [
+      "flask_todo_api/app.py",
+      "flask_todo_api/config.py",
+      "flask_todo_api/models.py",
+      "flask_todo_api/routes.py",
+      "flask_todo_api/utils.py",
+      "flask_todo_api/requirements.txt",
+      "flask_todo_api/templates/index.html",
+      "flask_todo_api/static/style.css",
+      "flask_todo_api/logs/app.log",
+      "flask_todo_api/tests/test_app.py",
+      "flask_todo_api/tests/test_models.py",
+      "flask_todo_api/tests/test_routes.py"
+    ],
+    "cost_usd": 0.2166,
+    "zk_proof": "d79f0b5fd0e5d5360ba5db25fb239b22",
+    "timestamp": "2026-02-16T03:24:39.687544"
+  }
+]

@@ -1,5 +1,0 @@
-matplotlib
-sqlite3
-jellyfish
-requests
-fastapi

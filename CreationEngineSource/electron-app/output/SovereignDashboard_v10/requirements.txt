@@ -1,5 +1,0 @@
-GPUtil
-PyQt6
-PyQtGraph
-PyQt5
-psutil

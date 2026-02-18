@@ -1,0 +1,40 @@
+{
+    "project_heritage": ["Kinetic Prism", "Viral Stream Phoenix", "Creation Engine"],
+    "permanent_rules": [
+        {
+            "id": "RES-001",
+            "issue": "API Rate Limiting (429 Errors)",
+            "lesson": "Always implement an API Key Rotation system and a Cooldown Manager. Never assume infinite 200 OK responses.",
+            "enforcement": "Inject a middleware decorator for all external requests."
+        },
+        {
+            "id": "MEM-002",
+            "issue": "Narrative Memory Loop",
+            "lesson": "AI agents repeat content without a persistent 'Narrative Memory' log to track previous outputs.",
+            "enforcement": "Require a local SQLite or JSON log check before content generation."
+        },
+        {
+            "id": "OPS-003",
+            "issue": "Static Composition",
+            "lesson": "Hardcoded FFmpeg strings fail across different aspect ratios.",
+            "enforcement": "Use dynamic FFmpeg compositor classes with 'Smart Overlay' scaling logic."
+        },
+        {
+            "id": "AUT-004",
+            "issue": "Reactive Triggering",
+            "lesson": "Systems shouldn't wait for manual input; they need 'The Pulse' to watch market/data triggers.",
+            "enforcement": "Default to background watchdog/observer patterns for data-driven projects."
+        },
+        {
+            "id": "SAF-005",
+            "issue": "Broken Game State / CPU Exhaustion",
+            "lesson": "Autonomous agents must prioritize environmental stability. Non-reversible binary patches or heavy compression tasks must be gated by 'FORCE' and human verification.",
+            "enforcement": "Mandatory safety decorator on all file-destructive or resource-intensive functions."
+        }
+    ],
+    "prohibited_patterns": [
+        "Synchronous I/O in Flask/FastAPI routes",
+        "Hardcoded API keys in environment files",
+        "Uncapped recursive loops without a 'Circuit Breaker'"
+    ]
+}

@@ -1,4 +1,0 @@
-reportlab
-fastapi
-faker
-uvicorn

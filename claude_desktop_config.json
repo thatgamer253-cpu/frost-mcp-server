@@ -1,9 +1,0 @@
-{
-  "mcpServers": {
-    "frost-job-tools": {
-      "command": "python",
-      "args": ["c:\\Users\\thatg\\Desktop\\Frost\\frost_mcp_server.py"],
-      "env": {}
-    }
-  }
-}

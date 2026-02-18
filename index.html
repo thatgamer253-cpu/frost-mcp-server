@@ -1,0 +1,1415 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVERLORD — Command Center</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── Reset & Base ─────────────────────────────────────── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg-base: #050508;       /* Deep Space */
+        --bg-surface: rgba(18, 18, 28, 0.6);
+        --bg-card: rgba(30, 30, 45, 0.5); /* Lighter, bluer glass */
+        --bg-input: rgba(0, 0, 0, 0.3);
+        
+        --border: rgba(255, 255, 255, 0.1);
+        --border-glow: rgba(139, 92, 246, 0.5);
+        
+        --accent: #8b5cf6;        /* Vivid Violet */
+        --accent-glow: #c4b5fd;
+        --accent-hover: #7c3aed;
+        
+        --cyan: #06b6d4;
+        --cyan-glow: #67e8f9;
+        
+        --pink: #ec4899;          /* Radical Red/Pink */
+        
+        --text: #f1f5f9;
+        --text-dim: #94a3b8;
+        --text-mid: #cbd5e1;
+        
+        --green: #10b981;
+        --green-soft: rgba(16, 185, 129, 0.15);
+        --red: #f43f5e;
+        
+        --void-grid: rgba(139, 92, 246, 0.08); /* Brighter grid */
+      }
+
+/* ... existing body styles ... */
+
+      /* ── Build HUD ─────────────────────────────────────────── */
+      .build-stats {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.05);
+        background: rgba(0,0,0,0.2);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 3px; height: 100%;
+      }
+
+      .stat-card.cost {
+        background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);
+        border-color: rgba(16, 185, 129, 0.2);
+      }
+      .stat-card.cost::before { background: var(--green); box-shadow: 0 0 8px var(--green); }
+      .stat-card.cost .value { color: #34d399; text-shadow: 0 0 10px rgba(52, 211, 153, 0.3); }
+
+      .stat-card.time {
+        background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), transparent);
+        border-color: rgba(6, 182, 212, 0.2);
+      }
+      .stat-card.time::before { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+      .stat-card.time .value { color: #22d3ee; text-shadow: 0 0 10px rgba(34, 211, 238, 0.3); }
+
+      .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--text-dim);
+        transition: all 0.3s;
+      }
+
+      .status-badge.active {
+        background: rgba(139, 92, 246, 0.15);
+        border-color: var(--accent);
+        color: #fff;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+      }
+      
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--text-dim);
+        transition: all 0.3s;
+      }
+      
+      .status-badge.active .status-dot {
+        background: var(--accent);
+        box-shadow: 0 0 10px var(--accent);
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+        70% { box-shadow: 0 0 0 6px rgba(139, 92, 246, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+      }
+
+      /* ── Consensus Indicator ────────────────────────────────── */
+      #consensus-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.05);
+      }
+
+      #consensus-light {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transition: all 0.3s;
+      }
+
+      .pulse-green { background: #00ff00; box-shadow: 0 0 10px #00ff00; animation: indicator-pulse 2s infinite; }
+      .pulse-yellow { background: #ffff00; box-shadow: 0 0 10px #ffff00; }
+      .pulse-red { background: #ff0000; box-shadow: 0 0 20px #ff0000; animation: indicator-alert 0.5s infinite; }
+
+      @keyframes indicator-pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+      @keyframes indicator-alert { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+      /* ── Pipeline Progress ─────────────────────────────────── */
+      .pipeline {
+        display: flex;
+        gap: 0;
+        padding: 20px 0;
+      }
+
+      .pipeline-stage {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+      }
+
+      .pipeline-stage::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        width: 100%;
+        height: 1px;
+        background: var(--border);
+        z-index: 0;
+      }
+      .pipeline-stage:last-child::after { display: none; }
+
+      .pipeline-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #1e1e2e; /* Matches card bg */
+        border: 2px solid var(--border);
+        z-index: 1;
+        transition: all 0.3s;
+        box-shadow: 0 0 0 4px var(--bg-base); /* mask */
+        color: transparent; font-size: 0; 
+        display: flex; align-items: center; justify-content: center;
+      }
+
+      .pipeline-dot.active {
+        border-color: var(--accent);
+        background: var(--bg-base);
+        box-shadow: 0 0 0 4px var(--bg-base), 0 0 15px var(--accent);
+        transform: scale(1.2);
+      }
+
+      .pipeline-dot.done {
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px var(--bg-base);
+      }
+
+      .pipeline-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .pipeline-label.active { color: var(--text); }
+      .pipeline-label.done { color: var(--accent); }
+
+
+      body {
+        font-family: "Inter", -apple-system, sans-serif;
+        background: var(--bg-base);
+        color: var(--text);
+        height: 100vh;
+        overflow: hidden;
+        -webkit-app-region: drag;
+        /* Subtle Grid Background */
+        background-image: 
+            linear-gradient(var(--void-grid) 1px, transparent 1px),
+            linear-gradient(90deg, var(--void-grid) 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      
+      /* Vignette */
+      body::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(2, 4, 8, 0.8) 100%);
+          pointer-events: none;
+          z-index: -1;
+      }
+
+      input, textarea, button, select, label, .sidebar, .main-panel, .tab-bar {
+        -webkit-app-region: no-drag;
+      }
+
+      /* ── Custom Scrollbars ─────────────────────────────────── */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+        transition: background 0.2s;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      ::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+
+      /* ── App Grid ──────────────────────────────────────────── */
+      .app-grid {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        height: 100vh;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* ── Sidebar ───────────────────────────────────────────── */
+      .sidebar {
+        background: rgba(5, 5, 8, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-right: 1px solid var(--border);
+        padding: 24px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        overflow-y: auto;
+        position: relative;
+        z-index: 10;
+      }
+
+      .logo {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 2px;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .logo::before {
+          content: "";
+          display: block;
+          width: 12px;
+          height: 12px;
+          background: var(--accent);
+          box-shadow: 0 0 10px var(--accent);
+          transform: rotate(45deg);
+      }
+
+      .logo-sub {
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--accent-glow);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 24px;
+        padding-left: 20px;
+        opacity: 0.8;
+      }
+
+      .divider { 
+          height: 1px; 
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); 
+          margin: 16px 0; 
+      }
+
+      .section-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 12px 0 8px;
+        padding-left: 4px;
+      }
+
+      .field-label {
+        font-size: 10px;
+        color: var(--text-mid);
+        margin-bottom: 6px;
+        font-weight: 500;
+        padding-left: 2px;
+      }
+
+      .field-input, .field-select {
+        width: 100%;
+        padding: 8px 12px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        outline: none;
+        transition: all 0.2s;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+      }
+      
+      .field-input::placeholder { color: rgba(255,255,255,0.15); }
+
+      .field-input:focus, .field-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent-soft);
+        background: rgba(0,0,0,0.6);
+      }
+
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 4px;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+      .checkbox-row:hover { opacity: 1; }
+
+      .checkbox-row input[type="checkbox"] {
+        accent-color: var(--accent);
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+      }
+      
+      .checkbox-row label {
+          font-family: "Inter", sans-serif;
+          font-size: 12px;
+          font-weight: 500;
+          color: var(--text);
+      }
+
+      .file-tree {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        color: var(--text-dim);
+        padding: 10px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      /* ── Main Panel ────────────────────────────────────────── */
+      .main-panel {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: rgba(0,0,0,0.2); /* Tint */
+      }
+
+      /* ── Tab Bar ────────────────────────────────────────────── */
+      .tab-bar {
+        display: flex;
+        padding: 0 24px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(0,0,0,0.2);
+      }
+
+      .tab-btn {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-dim);
+        background: transparent;
+        border: none;
+        padding: 16px 20px;
+        cursor: pointer;
+        position: relative;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.2s;
+      }
+      
+      .tab-btn::after {
+          content: "";
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background: var(--accent);
+          transform: scaleX(0);
+          transition: transform 0.2s;
+      }
+
+      .tab-btn:hover { color: var(--text); }
+
+      .tab-btn.active {
+        color: var(--text);
+      }
+      .tab-btn.active::after {
+          transform: scaleX(1);
+          box-shadow: 0 -4px 10px var(--accent);
+      }
+
+      /* ── Tab Content ───────────────────────────────────────── */
+      .tab-content {
+        flex: 1;
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+        padding: 24px 32px;
+        gap: 20px;
+      }
+
+      .tab-content.active { display: flex; }
+
+      <!-- ── Project Details Modal ────────────────────────────── -->
+    <div id="detailsModal" class="modal-overlay hidden">
+      <div class="modal-content glass-panel">
+        <div class="modal-header">
+          <h2 id="modalTitle">Project Name</h2>
+          <button id="closeModalBtn" class="icon-btn">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="label">TOTAL COST</span>
+              <span id="modalCost" class="value">$0.00</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">FILES</span>
+              <span id="modalFiles" class="value">0</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">LAST EDITED</span>
+              <span id="modalDate" class="value">--</span>
+            </div>
+            <div class="detail-item full-width">
+              <span class="label">LOCATION</span>
+              <span id="modalPath" class="value path-text">...</span>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button id="modalOpenBtn" class="btn secondary">📂 Open Folder</button>
+            <button id="modalUpgradeBtn" class="btn primary">🛠️ Upgrade Project</button>
+            <button id="modalDeleteBtn" class="btn danger">🗑️ Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Project Details Modal ────────────────────────────── -->
+    <div id="detailsModal" class="modal-overlay hidden">
+      <div class="modal-content glass-panel">
+        <div class="modal-header">
+          <h2 id="modalTitle">Project Name</h2>
+          <button id="closeModalBtn" class="icon-btn">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <span class="label">TOTAL COST</span>
+              <span id="modalCost" class="value">$0.00</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">FILES</span>
+              <span id="modalFiles" class="value">0</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">LAST EDITED</span>
+              <span id="modalDate" class="value">--</span>
+            </div>
+            <div class="detail-item full-width">
+              <span class="label">LOCATION</span>
+              <span id="modalPath" class="value path-text">...</span>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button id="modalOpenBtn" class="btn secondary">📂 Open Folder</button>
+            <button id="modalUpgradeBtn" class="btn primary">🛠️ Upgrade Project</button>
+            <button id="modalDeleteBtn" class="btn danger">🗑️ Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Scripts ─────────────────────────────────────────── -->
+    <script src="renderer.js"></script>
+  </body>
+</html>
+      /* ── Build Tab ─────────────────────────────────────────── */
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .header-title {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.5px;
+      }
+
+      /* ── Prompt Area ───────────────────────────────────────── */
+      .prompt-box {
+        width: 100%;
+        min-height: 70px;
+        max-height: 110px;
+        resize: vertical;
+        padding: 10px 14px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .prompt-box:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+
+      .prompt-box::placeholder { color: var(--text-dim); }
+
+      /* ── Console Log ───────────────────────────────────────── */
+      .console-header {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--green);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+        margin-bottom: 4px;
+      }
+
+      .console-header .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--green);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--green);
+        animation: blink 2s infinite;
+      }
+      
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+      .console {
+        background: rgba(2, 4, 8, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        padding: 12px;
+        overflow-y: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        line-height: 1.6;
+        color: #a7f3d0;
+        flex: 1;
+        min-height: 0;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+      }
+
+      .log-line { white-space: pre-wrap; word-break: break-all; margin-bottom: 2px; }
+      .log-architect { color: var(--cyan); }
+      .log-engineer { color: var(--yellow); }
+      .log-debugger { color: var(--magenta); }
+      .log-docker { color: var(--orange); }
+      .log-bundler { color: #2dd4bf; font-weight: 600; }
+      .log-success { color: var(--green); font-weight: 700; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
+      .log-error { color: var(--red); font-weight: bold; }
+      .log-system { color: var(--text-dim); }
+
+      /* ── Button Row ────────────────────────────────────────── */
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr 140px;
+        gap: 12px;
+        padding-top: 10px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-build {
+        background: linear-gradient(135deg, var(--accent), #4f46e5);
+        color: white;
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .btn-build::before {
+          content: "";
+          position: absolute;
+          top: 0; left: -100%;
+          width: 100%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transition: left 0.5s;
+      }
+
+      .btn-build:hover:not(:disabled) {
+        box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+        transform: translateY(-1px);
+        border-color: rgba(255,255,255,0.3);
+      }
+      .btn-build:hover::before { left: 100%; }
+
+      .btn-build:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
+
+      .btn-cancel { 
+          background: rgba(244, 63, 94, 0.1); 
+          color: var(--red); 
+          border: 1px solid rgba(244, 63, 94, 0.3);
+      }
+
+      .btn-cancel:hover:not(:disabled) {
+        background: rgba(244, 63, 94, 0.2);
+        box-shadow: 0 0 15px rgba(244, 63, 94, 0.2);
+        border-color: var(--red);
+      }
+
+      .btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
+
+      /* ── Gallery Tab ───────────────────────────────────────── */
+      .gallery-search {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        padding: 6px 10px;
+        width: 220px;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .gallery-search:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent-soft);
+        background: rgba(0,0,0,0.6);
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 14px;
+        overflow-y: auto;
+        flex: 1;
+        padding: 4px;
+      }
+
+      .gallery-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 140px; /* Fixed height for consistency */
+      }
+
+      .gallery-card:hover {
+        border-color: rgba(99, 102, 241, 0.35);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(99, 102, 241, 0.12);
+        transform: translateY(-2px);
+        background: rgba(20, 25, 45, 0.9);
+        z-index: 10;
+      }
+
+      .card-name {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 0;
+      }
+
+      .card-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: auto; /* Pushes content down */
+        overflow: hidden;
+        max-height: 44px; /* Limit height of tags */
+      }
+
+      .card-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: var(--accent-soft);
+        color: var(--accent-glow);
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .card-tag.stack { background: rgba(0, 212, 255, 0.1); color: var(--cyan); }
+      .card-tag.files { background: rgba(255, 214, 0, 0.1); color: var(--yellow); }
+      .card-tag.cost { background: var(--green-soft); color: var(--green); }
+
+      .card-date {
+        font-size: 9px;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 0;
+      }
+
+      .card-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; /* Open, Upgrade, Delete */
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      
+      .card-actions:has(.run) {
+         grid-template-columns: 1fr 1fr 1fr 1fr; /* If .exe exists */
+      }
+
+      .card-btn {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        padding: 6px 4px; /* Reduce padding to fit */
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background: var(--bg-input);
+        color: var(--text-mid);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-btn:hover {
+        border-color: var(--accent);
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .card-btn.run {
+        background: var(--green-soft);
+        border-color: rgba(0, 255, 136, 0.2);
+        color: var(--green);
+      }
+      .card-btn.run:hover { background: rgba(0, 255, 136, 0.15); }
+
+      .card-btn.upgrade {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: rgba(99, 102, 241, 0.25);
+        color: var(--accent-glow);
+      }
+      .card-btn.upgrade:hover { background: rgba(99, 102, 241, 0.2); }
+
+      .card-btn.delete {
+        background: rgba(244, 63, 94, 0.08);
+        border-color: rgba(244, 63, 94, 0.2);
+        color: var(--red);
+      }
+      .card-btn.delete:hover { background: rgba(244, 63, 94, 0.15); border-color: var(--red); }
+
+
+      .gallery-empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-dim);
+        font-size: 13px;
+      }
+
+      .gallery-empty .icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+        opacity: 0.3;
+      }
+
+      /* ── Maintenance Tab ───────────────────────────────────── */
+      .maint-controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      .btn-scan {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        background: linear-gradient(135deg, var(--cyan), #0891b2);
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+      }
+
+      .btn-scan:hover:not(:disabled) {
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
+        transform: translateY(-1px);
+        filter: brightness(1.1);
+      }
+
+      .btn-scan:disabled { opacity: 0.35; cursor: not-allowed; }
+
+      .maint-status {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--text-dim);
+      }
+
+      /* ── Settings Tab ──────────────────────────────────────── */
+      .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        overflow-y: auto;
+        flex: 1;
+        padding: 4px 10px;
+      }
+
+      .settings-section {
+        background: rgba(18, 18, 28, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        transition: border-color 0.3s;
+      }
+
+      .settings-section:hover {
+        border-color: var(--border-glow);
+        background: rgba(18, 18, 28, 0.6);
+      }
+
+      .settings-title {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--accent-glow);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .settings-title::before {
+          content: "";
+          display: block;
+          width: 4px; height: 4px;
+          background: var(--accent);
+          box-shadow: 0 0 5px var(--accent);
+      }
+
+      .setting-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+
+      .setting-label {
+        font-size: 10px;
+        color: var(--text-mid);
+        font-weight: 500;
+        padding-left: 2px;
+      }
+
+      .setting-input {
+        width: 100%;
+        padding: 8px 10px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        outline: none;
+      }
+
+      .setting-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--accent-soft), var(--glow-accent);
+      }
+
+      .btn-save {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 10px 28px;
+        border-radius: 8px;
+        border: none;
+        background: var(--accent);
+        color: white;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: all 0.2s;
+      }
+
+      .btn-save:hover {
+        background: var(--accent-hover);
+        box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
+      }
+
+      .save-msg {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--green);
+        opacity: 0;
+        transition: opacity 0.3s;
+        margin-left: 10px;
+      }
+
+      .save-msg.show { opacity: 1; }
+
+      .budget-slider {
+        width: 100%;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+
+      /* ── Responsive ────────────────────────────────────────── */
+      @media (max-width: 700px) {
+        .app-grid { grid-template-columns: 1fr; }
+        .sidebar { max-height: 180px; border-right: none; border-bottom: 1px solid var(--border); }
+        .settings-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-grid">
+      <!-- ═══ Sidebar ═════════════════════════════════════════ -->
+      <aside class="sidebar">
+        <div class="logo">OVERLORD</div>
+        <div class="logo-sub">Autonomous Program Builder</div>
+        <div class="divider"></div>
+
+        <div class="section-label">Project Config</div>
+
+        <div class="field-label">Project Name</div>
+        <input id="projectName" class="field-input" type="text" value="GeneratedApp" spellcheck="false" />
+
+        <div class="field-label">Mode</div>
+        <select id="buildMode" class="field-select">
+          <option value="new">✨ New Project</option>
+          <option value="upgrade">🛠️ Upgrade Existing</option>
+          <option value="reverse">🔄 Reverse Engineer</option>
+        </select>
+
+        <div id="sourcePathRow" style="display: none;">
+          <div class="field-label">Source Path</div>
+          <div style="display: flex; gap: 5px;">
+            <input id="sourcePath" class="field-input" type="text" placeholder="C:\Path\To\Existing\Project" spellcheck="false" />
+            <button id="btnSelectSource" class="card-btn" style="height: 32px; padding: 0 10px;">📂</button>
+          </div>
+        </div>
+
+        <div class="field-label">Output Directory</div>
+        <input id="outputDir" class="field-input" type="text" value="./output" spellcheck="false" />
+
+        <div class="field-label">Architect Model</div>
+        <select id="model" class="field-select" onchange="toggleEngModel()">
+          <!-- ... options ... -->
+          <optgroup label="FREE  Groq">
+            <option value="llama-3.3-70b-versatile">Llama 3.3 70B  FREE</option>
+            <option value="llama-3.1-8b-instant">Llama 3.1 8B Instant</option>
+            <option value="gemma2-9b-it">Gemma 2 9B</option>
+            <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+          </optgroup>
+          <optgroup label="FREE  Gemini">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+          </optgroup>
+          <optgroup label="OpenAI (paid)">
+            <option value="gpt-4o">gpt-4o</option>
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4-turbo">gpt-4-turbo</option>
+          </optgroup>
+          <optgroup label="Anthropic (paid)">
+            <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+            <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+          </optgroup>
+          <optgroup label="Local (Ollama)">
+            <option value="deepseek-coder:6.7b">deepseek-coder:6.7b</option>
+            <option value="qwen2.5-coder:7b">qwen2.5-coder:7b</option>
+            <option value="codellama:13b">codellama:13b</option>
+          </optgroup>
+        </select>
+
+        <div id="engModelRow">
+           <!-- ... engineer model options ... -->
+           <div class="field-label">Engineer Model</div>
+           <select id="engModel" class="field-select">
+             <option value="">Same as Architect</option>
+             <optgroup label="FREE  Groq" class="cloud-eng-opts">
+               <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
+               <option value="llama-3.1-8b-instant">Llama 3.1 8B (fast)</option>
+             </optgroup>
+             <optgroup label="FREE  Gemini" class="cloud-eng-opts">
+               <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+             </optgroup>
+             <optgroup label="OpenAI" class="cloud-eng-opts">
+               <option value="gpt-4o-mini">gpt-4o-mini (fast)</option>
+               <option value="gpt-4o">gpt-4o (quality)</option>
+             </optgroup>
+             <optgroup label="Local (Ollama)" class="local-eng-opts">
+               <option value="deepseek-coder:6.7b">deepseek-coder:6.7b</option>
+               <option value="qwen2.5-coder:7b">qwen2.5-coder:7b</option>
+             </optgroup>
+           </select>
+        </div>
+
+        <div id="reviewModelRow">
+          <div class="field-label">Review Model (Senior)</div>
+          <select id="reviewModel" class="field-select">
+            <option value="">Same as Local Model</option>
+            <optgroup label="Anthropic (Recommended)">
+              <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+              <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (fast)</option>
+            </optgroup>
+            <optgroup label="Gemini">
+              <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+              <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+            </optgroup>
+            <optgroup label="OpenAI">
+              <option value="gpt-4o">gpt-4o</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <script>
+          function toggleEngModel() {
+            const m = document.getElementById('model').value.toLowerCase();
+            const local = ['deepseek','codellama','qwen','mistral','phi','starcoder','wizardcoder'];
+            const isGroqOrGemini = m.startsWith('llama') || m.startsWith('gemma') || m.startsWith('mixtral') || m.startsWith('gemini');
+            const isLocal = !isGroqOrGemini && local.some(p => m.startsWith(p));
+            const showCloud = !isLocal || isGroqOrGemini;
+            document.querySelectorAll('.cloud-eng-opts').forEach(el => el.style.display = showCloud ? '' : 'none');
+            document.querySelectorAll('.local-eng-opts').forEach(el => el.style.display = isLocal && !isGroqOrGemini ? '' : 'none');
+            document.getElementById('engModel').value = '';
+            const keyField = document.getElementById('apiKey');
+            if (m.startsWith('gemini')) keyField.placeholder = 'Gemini API Key (or set GEMINI_API_KEY)';
+            else if (isGroqOrGemini) keyField.placeholder = 'Groq API Key (or set GROQ_API_KEY)';
+            else if (m.startsWith('gpt')) keyField.placeholder = 'sk-... (or set OPENAI_API_KEY)';
+            else keyField.placeholder = 'Optional for local models';
+          }
+          document.addEventListener('DOMContentLoaded', toggleEngModel);
+        </script>
+
+        <div class="field-label">API Key</div>
+        <input id="apiKey" class="field-input" type="password" placeholder="sk-..." spellcheck="false" />
+
+        <div class="divider"></div>
+        <div class="section-label">Build Options</div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="optDocker" checked />
+          <label for="optDocker">Dockerfile</label>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="optReadme" checked />
+          <label for="optReadme">README.md</label>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="optDebug" checked />
+          <label for="optDebug">Auto-Debug</label>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="optBundle" checked />
+          <label for="optBundle">Bundle .exe</label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">Advanced Controls</div>
+        
+        <div class="field-label">Phase Limit</div>
+        <select id="limitPhase" class="field-select">
+            <option value="all">Full Run (All Phases)</option>
+            <option value="plan">Plan Only (Architect)</option>
+            <option value="code">Code Only (Developer)</option>
+            <option value="verify">Verify Only (Supervisor)</option>
+        </select>
+
+        <div class="field-label">Focus (Glob Pattern)</div>
+        <input id="focusPattern" class="field-input" type="text" placeholder="e.g. src/auth/*.py" spellcheck="false" />
+
+        <div class="checkbox-row">
+           <input type="checkbox" id="optDecompileOnly" />
+           <label for="optDecompileOnly">Decompile Only (Docs)</label>
+        </div>
+        <div class="checkbox-row">
+           <input type="checkbox" id="optCleanOutput" />
+           <label for="optCleanOutput">Clean Code Output</label>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">Output Files</div>
+        <div id="fileTree" class="file-tree">No build yet.</div>
+      </aside>
+
+      <!-- ═══ Main Panel ══════════════════════════════════════ -->
+      <main class="main-panel">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="build">Build</button>
+          <button class="tab-btn" data-tab="gallery">Gallery</button>
+          <button class="tab-btn" data-tab="maintenance">Maintenance</button>
+          <button class="tab-btn" data-tab="settings">Settings</button>
+        </div>
+
+        <!-- ═══ BUILD TAB ═════════════════════════════════════ -->
+        <div id="tab-build" class="tab-content active">
+          <div class="header-row">
+            <span class="header-title">MISSION PROMPT</span>
+            <div class="build-stats">
+              <div class="stat-card cost">
+                <span>COST</span>
+                <span id="liveCost" class="value">$0.00</span>
+              </div>
+              <div class="stat-card time">
+                <span>TIME</span>
+                <span id="liveTime" class="value">0:00</span>
+              </div>
+              <div id="statusBadge" class="status-badge">
+                <div id="statusDot" class="status-dot"></div>
+                <span id="statusText">STANDBY</span>
+              </div>
+              <!-- Consensus Indicator -->
+              <div id="consensus-container">
+                  <div id="consensus-light" class="pulse-yellow"></div>
+                  <span id="consensus-text" style="color: #fff; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 600;">Awaiting Input</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pipeline Progress -->
+          <div class="pipeline">
+            <div class="pipeline-stage" data-phase="prompt">
+              <div class="pipeline-dot" id="pip-prompt">P</div>
+              <div class="pipeline-label">Prompt</div>
+            </div>
+            <div class="pipeline-stage" data-phase="architect">
+              <div class="pipeline-dot" id="pip-architect">A</div>
+              <div class="pipeline-label">Architect</div>
+            </div>
+            <div class="pipeline-stage" data-phase="engineer">
+              <div class="pipeline-dot" id="pip-engineer">E</div>
+              <div class="pipeline-label">Engineer</div>
+            </div>
+            <div class="pipeline-stage" data-phase="reviewer">
+              <div class="pipeline-dot" id="pip-reviewer">R</div>
+              <div class="pipeline-label">Reviewer</div>
+            </div>
+            <div class="pipeline-stage" data-phase="debugger">
+              <div class="pipeline-dot" id="pip-debugger">D</div>
+              <div class="pipeline-label">Debugger</div>
+            </div>
+            <div class="pipeline-stage" data-phase="bundler">
+              <div class="pipeline-dot" id="pip-bundler">B</div>
+              <div class="pipeline-label">Bundler</div>
+            </div>
+            <div class="pipeline-stage" data-phase="environ">
+              <div class="pipeline-dot" id="pip-environ">S</div>
+              <div class="pipeline-label">Scripts</div>
+            </div>
+            <div class="pipeline-stage" data-phase="handoff">
+              <div class="pipeline-dot" id="pip-handoff">H</div>
+              <div class="pipeline-label">Handoff</div>
+            </div>
+          </div>
+
+          <textarea
+            id="promptInput"
+            class="prompt-box"
+            placeholder="Describe the program you want to build..."
+            spellcheck="false"
+          ></textarea>
+
+          <div style="display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; min-height: 0;">
+            <div class="console-header">
+              <span class="dot"></span>
+              LIVE FEED
+            </div>
+            <div id="console" class="console"></div>
+          </div>
+
+          <div class="button-row">
+            <button id="btnBuild" class="btn btn-build">INITIATE BUILD</button>
+            <button id="btnCancel" class="btn btn-cancel" disabled>ABORT</button>
+          </div>
+        </div>
+
+        <!-- ═══ GALLERY TAB ═══════════════════════════════════ -->
+        <div id="tab-gallery" class="tab-content">
+          <div class="header-row">
+            <span class="header-title">PROJECT GALLERY</span>
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="gallerySearch" class="gallery-search" placeholder="Search projects..." spellcheck="false" oninput="filterGallery()" />
+              <button id="btnRefreshGallery" class="card-btn" onclick="loadGallery()">Refresh</button>
+            </div>
+          </div>
+          <div id="galleryGrid" class="gallery-grid">
+            <div class="gallery-empty">
+              <div class="icon">&#9881;</div>
+              <p>No projects yet. Build something!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ MAINTENANCE TAB ═══════════════════════════════ -->
+        <div id="tab-maintenance" class="tab-content">
+          <div class="header-row">
+            <span class="header-title">MAINTENANCE STEWARD</span>
+            <div class="maint-controls">
+              <span id="maintStatus" class="maint-status">Ready</span>
+              <button id="btnScan" class="btn-scan" onclick="runMaintenance()">SCAN LIBRARY</button>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; min-height: 0;">
+            <div class="console-header">
+              <span class="dot"></span>
+              MAINTENANCE LOG
+            </div>
+            <div id="maintConsole" class="console"></div>
+          </div>
+        </div>
+
+        <!-- ═══ SETTINGS TAB ══════════════════════════════════ -->
+        <div id="tab-settings" class="tab-content">
+          <div class="header-row">
+            <span class="header-title">SETTINGS</span>
+            <div style="display: flex; align-items: center;">
+              <button class="btn-save" onclick="saveSettings()">Save</button>
+              <span id="saveMsg" class="save-msg">Saved!</span>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <div class="settings-section">
+              <div class="settings-title">API Keys <span style="font-size:9px; color:var(--text-dim); font-weight:400;">(one per line for key pooling)</span></div>
+              <div class="setting-row">
+                <div class="setting-label">OpenAI API Keys</div>
+                <textarea id="setOpenaiKey" class="setting-input" rows="3" placeholder="sk-...&#10;sk-...&#10;(one per line)" spellcheck="false" style="resize:vertical; font-family:'JetBrains Mono',monospace; font-size:10px;"></textarea>
+              </div>
+              <div class="setting-row">
+                <div class="setting-label">Groq API Keys</div>
+                <textarea id="setGroqKey" class="setting-input" rows="3" placeholder="gsk_...&#10;gsk_...&#10;(one per line)" spellcheck="false" style="resize:vertical; font-family:'JetBrains Mono',monospace; font-size:10px;"></textarea>
+              </div>
+              <div class="setting-row">
+                <div class="setting-label">Gemini API Keys</div>
+                <textarea id="setGeminiKey" class="setting-input" rows="3" placeholder="AI...&#10;AI...&#10;(one per line)" spellcheck="false" style="resize:vertical; font-family:'JetBrains Mono',monospace; font-size:10px;"></textarea>
+              </div>
+              <div class="setting-row">
+                <div class="setting-label">ElevenLabs API Key</div>
+                <input id="setElevenKey" class="setting-input" type="password" placeholder="(optional)" />
+              </div>
+              <div class="setting-row">
+                <div class="setting-label">Anthropic API Keys</div>
+                <textarea id="setAnthropicKey" class="setting-input" rows="3" placeholder="sk-ant-...&#10;sk-ant-...&#10;(one per line)" spellcheck="false" style="resize:vertical; font-family:'JetBrains Mono',monospace; font-size:10px;"></textarea>
+              </div>
+            </div>
+            <div class="settings-section">
+              <div class="settings-title">Defaults</div>
+              <div class="setting-row">
+                <div class="setting-label">Default Output Directory</div>
+                <input id="setOutputDir" class="setting-input" type="text" placeholder="./output" />
+              </div>
+              <div class="setting-row">
+                <div class="setting-label">Default Model</div>
+                <select id="setDefaultModel" class="setting-input" style="cursor:pointer;">
+                  <option value="llama-3.3-70b-versatile">Llama 3.3 70B (FREE)</option>
+                  <option value="gemini-2.5-flash">Gemini 2.5 Flash (FREE)</option>
+                  <option value="gpt-4o">gpt-4o</option>
+                  <option value="gpt-4o-mini">gpt-4o-mini</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div class="setting-label">Budget Limit: <span id="budgetVal">$5.00</span></div>
+                <input id="setBudget" class="budget-slider" type="range" min="1" max="50" value="5" step="1"
+                  oninput="document.getElementById('budgetVal').textContent = '$' + this.value + '.00'" />
+              </div>
+              <div class="setting-row">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px;">
+                  <label style="font-size:11px; display:flex; gap:6px; align-items:center; cursor:pointer;">
+                    <input type="checkbox" id="setAutoBundle" checked style="accent-color:var(--accent);"/> Auto-Bundle .exe
+                  </label>
+                  <label style="font-size:11px; display:flex; gap:6px; align-items:center; cursor:pointer;">
+                    <input type="checkbox" id="setAutoDocker" checked style="accent-color:var(--accent);"/> Auto-Docker
+                  </label>
+                  <label style="font-size:11px; display:flex; gap:6px; align-items:center; cursor:pointer;">
+                    <input type="checkbox" id="setAutoReadme" checked style="accent-color:var(--accent);"/> Auto-README
+                  </label>
+                </div>
+              </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
