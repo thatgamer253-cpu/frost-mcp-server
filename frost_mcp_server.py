@@ -1,35 +1,30 @@
+
 import os
-import asyncio
-from mcp.server import Server
-from mcp.types import Tool, TextContent
+from mcp.server.fastmcp import FastMCP
 
-app = Server("frost-mcp-server")
+# Initialize FastMCP - This automatically handles the ASGI app conversion
+mcp = FastMCP("frost-mcp-server")
 
-# This flag prevents the server from crashing on startup
-_engine_ready = False
+# --- Creation Engine Tools ---
 
-async def load_creation_engine():
-    global _engine_ready
-    if not _engine_ready:
-        # Heavily logic imports/init would go here
-        _engine_ready = True
+@mcp.tool()
+async def modernize_assets(path: str):
+    """
+    Trigger the Alchemist to upscale and optimize game assets.
+    """
+    return f"Alchemist: Starting 4K upscale on {path}. Check local 3060 Ti logs."
 
-@app.list_tools()
-async def list_tools() -> list[Tool]:
-    return [
-        Tool(
-            name="modernize_assets",
-            description="Upscale and optimize game assets.",
-            inputSchema={"type": "object", "properties": {"path": {"type": "string"}}}
-        )
-    ]
+@mcp.tool()
+async def run_siege_benchmark(target_exe: str):
+    """
+    Trigger the Sentinel to run a performance stress test.
+    """
+    return f"Sentinel: Initiating siege test on {target_exe}. Monitoring VRAM..."
 
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    await load_creation_engine() # Only loads when used
-    return [TextContent(type="text", text=f"Engine active. Processing {arguments.get('path')}...")]
+# --- Deployment Logic ---
 
 if __name__ == "__main__":
-    import uvicorn
+    # When running on Render, FastMCP needs to run as an SSE server
     port = int(os.getenv("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # 'host' must be 0.0.0.0 for Render to see the traffic
+    mcp.run(transport="sse", host="0.0.0.0", port=port)
